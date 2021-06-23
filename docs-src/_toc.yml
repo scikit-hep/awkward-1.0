@@ -72,11 +72,11 @@ sections:
       - file: how-to-math-broadcasting
         title: "Awkward broadcasting [todo]"
       - file: how-to-math-reducing
-        title: "Reducing (sum/min/any/all) [todo]"
+        title: "Reducing (sum/min/any/all)"
       - file: how-to-math-statistics
         title: "Statistics (mean/var/std) [todo]"
       - file: how-to-math-argminmax
-        title: "Using argmin/argmax [todo]"
+        title: "Using argmin/argmax"
       - file: how-to-math-gpu
         title: "On GPUs [todo]"
 

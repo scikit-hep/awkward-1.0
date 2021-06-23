@@ -156,44 +156,6 @@ ak.all(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=1)
 ak.all(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]))
 ```
 
-Argmin
-------
-
-[ak.argmin](https://awkward-array.readthedocs.io/en/latest/_auto/ak.argmin.html) returns the index position of the minimum value of the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements over a given axis.
-
-[![Argmin at axis](img/argmin.svg)](img/argmin.svg)
-
-```{code-cell} ipython3
-ak.argmin(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=0)
-```
-
-```{code-cell} ipython3
-ak.argmin(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=1)
-```
-
-```{code-cell} ipython3
-ak.argmin(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]))
-```
-
-Argmax
-------
-
-[ak.argmax](https://awkward-array.readthedocs.io/en/latest/_auto/ak.argmax.html) returns the index position of the maximum value of the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements over a given axis.
-
-[![Argmax at axis](img/argmax.svg)](img/argmax.svg)
-
-```{code-cell} ipython3
-ak.argmax(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=0)
-```
-
-```{code-cell} ipython3
-ak.argmax(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=1)
-```
-
-```{code-cell} ipython3
-ak.argmax(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]))
-```
-
 Count
 -----
 
