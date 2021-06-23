@@ -108,7 +108,7 @@ sections:
       - file: how-to-restructure-concatenate
         title: "Concatenating and interleaving [todo]"
       - file: how-to-restructure-sort
-        title: "Sorting [todo]"
+        title: "Sorting"
 
   - file: how-to-combinatorics
     title: "Combinatorics"
