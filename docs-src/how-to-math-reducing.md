@@ -18,10 +18,14 @@ How to reduce dimensions (sum/min/any/all)
 import awkward as ak
 ```
 
-A reducer function is a function that operates on an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) reducing its dimentions in a given axis by applying the function to the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements along this axis. By default `axis=None`. In this case the reducer function returns a scalar that is calculated over all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html).
+A reducer function is an operation on an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) reducing its dimentions in a given axis by applying the function to the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements along this axis. The initial array is unchanged and a new array instance is returned.
+
+By default, the axis is `None`. In this case the reducer function returns a scalar that is calculated over all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) as if it is a flat list.
 
 Product reducer
 ---------------
+
+Product is a result of one or more multiplications.
 
 [ak.prod](https://awkward-array.readthedocs.io/en/latest/_auto/ak.prod.html) returns the product of the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements over a given axis.
 
@@ -35,7 +39,7 @@ ak.prod(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=0)
 ak.prod(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]), axis=1)
 ```
 
-By default `axis=None`. In this case the product of all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) will be calculated:
+By default, `axis=None`. In this case the product of all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) will be calculated:
 
 ```{code-cell} ipython3
 ak.prod(array = ak.Array([[2, 3, 5], [], [None, 7], [11]]))
@@ -111,6 +115,8 @@ Any reducer - “logical or”
 
 [ak.any](https://awkward-array.readthedocs.io/en/latest/_auto/ak.any.html) returns “logical or” of the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements over a given axis.
 
+This operation returns `False` for an empty list.
+
 This operation is similar to NumPy's [any](https://docs.scipy.org/doc/numpy/reference/generated/numpy.any.html).
 
 [![Any at axis](img/any.svg)](img/any.svg)
@@ -132,7 +138,7 @@ All reducer - “logical and”
 
 [ak.all](https://awkward-array.readthedocs.io/en/latest/_auto/ak.all.html) tests whether all [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements along a given axis evaluate to `True`, e.g. it returns a “logical and” of the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements over a given axis.
 
-It returns `True` for an empty list.
+This operation returns `True` for an empty list.
 
 It is similar to NumPy's [all](https://docs.scipy.org/doc/numpy/reference/generated/numpy.all.html).
 
@@ -241,5 +247,5 @@ This operation is similar to NumPy's [ptp](https://docs.scipy.org/doc/numpy/refe
 array = ak.Array([[0, 1, 2, 3],
                   [          ],
                   [4, 5      ]])
-ak.ptp(array)
+# FIXME: ak.ptp(array)
 ```
