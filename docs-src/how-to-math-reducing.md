@@ -18,7 +18,7 @@ How to reduce dimensions (sum/min/any/all)
 import awkward as ak
 ```
 
-A reducer function is a function that operates on an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) reduceing its dimentions in a given axis by applying the function to the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements along this axis. By default `axis=None`. In this case the reducer function returns a scalar that is calculated over all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html).
+A reducer function is a function that operates on an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) reducing its dimentions in a given axis by applying the function to the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements along this axis. By default `axis=None`. In this case the reducer function returns a scalar that is calculated over all the elements in the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html).
 
 Product reducer
 ---------------
