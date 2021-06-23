@@ -18,7 +18,7 @@ How to sort arrays and inner arrays
 import awkward as ak
 ```
 
-Sorting puts Awkward Array elements in an ordered sequence: numeric or lexicographical, ascending or descending.
+Sorting puts the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) elements in an ordered sequence: numeric or lexicographical, ascending or descending.
 
 By default, [ak.sort](https://awkward-array.readthedocs.io/en/latest/_auto/ak.sort.html) sorts the elements in non-descending order. The order of equivalent elements is guaranteed to be preserved.
 
@@ -33,11 +33,11 @@ Sorting in axis
 
 An optional `axis` parameter defines an axis along which to sort. The default is `axis=-1`, which is the last axis.
 
-Awkward Array axes are defined similar to Numpy axes. Unlike other operations, sorting does not support `axis=None`.
+The [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) axes are defined similar to Numpy axes. Unlike other operations, sorting does not support `axis=None`.
 
 [![Sorting axis](img/sorting-axis.svg)](img/sorting-axis.svg)
 
-In Akward Array, `axis=0` is the "first" axis and `axis=-1` is the last axis.
+In [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html), `axis=0` is the "first" axis and `axis=-1` is the last axis.
 
 ```{code-cell} ipython3
 ak.sort(array = ak.Array([[2, 5, 3], [], [None, 0], [1]]), axis=0)
@@ -50,7 +50,7 @@ ak.sort(array = ak.Array([[2, 5, 3], [], [None, 0], [1]]), axis=1)
 ```
 An empty range is not sorted.
 
-The results make a lot of sense when you understand how the Awkward Array axis work.
+The results make a lot of sense when you understand how the [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) axis work.
 
 Sorting `None` values
 ---------------------
@@ -105,7 +105,7 @@ sorted_record = ak.sort(array)
 sorted_record
 ```
 
-This is the only case where `ak.sort` returns a record type instead of an array:
+This is the only case where `ak.sort` returns a record type instead of an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html):
 
 ```{code-cell} ipython3
 ak.to_list(sorted_record)
