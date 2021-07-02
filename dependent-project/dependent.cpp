@@ -40,7 +40,7 @@ std::shared_ptr<ak::Content> producer() {
   builder.string("wow");
   builder.endrecord();
 
-  return builder.snapshot();
+  return builder.builder().snapshot();
 }
 
 std::string consumer(const std::shared_ptr<ak::Content>& array) {
