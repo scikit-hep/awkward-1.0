@@ -9,6 +9,7 @@
 
 #include "awkward/common.h"
 #include "awkward/util.h"
+#include "awkward/builder/Builder.h"
 
 namespace awkward {
   class Content;
@@ -46,7 +47,7 @@ namespace awkward {
     /// knowledge.
     void
       clear();
-
+private:
     /// @brief Current high level Type of the accumulated array.
     ///
     /// @param typestrs A mapping from `"__record__"` parameters to string
@@ -66,6 +67,7 @@ namespace awkward {
     const ContentPtr
       snapshot() const;
 
+public:
     /// @brief Returns the element at a given position in the array, handling
     /// negative indexing and bounds-checking like Python.
     ///
@@ -279,6 +281,10 @@ namespace awkward {
     /// @brief Ends a record.
     void
       endrecord();
+
+    // FIXME: refactor
+    // @brief Root node of the Builder tree.
+    const Builder& builder() const { return *builder_; }
 
     /// @brief Append an element `at` a given index of an arbitrary `array`
     /// (Content instance) to the accumulated data, handling

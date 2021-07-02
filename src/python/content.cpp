@@ -968,13 +968,17 @@ make_ArrayBuilder(const py::handle& m, const std::string& name) {
       .def("__repr__", &ak::ArrayBuilder::tostring)
       .def("__len__", &ak::ArrayBuilder::length)
       .def("clear", &ak::ArrayBuilder::clear)
-      .def("type", &ak::ArrayBuilder::type)
+      // FIXME: refactor
+      .def("type", [](const ak::ArrayBuilder& self, const std::map<std::string, std::string>& typestrs) -> std::shared_ptr<ak::Type> {
+        return self.builder().snapshot().get()->type(typestrs);
+      })
       .def("snapshot", [](const ak::ArrayBuilder& self) -> py::object {
-        return box(self.snapshot());
+        return box(self.builder().snapshot());
       })
       .def("__getitem__", &getitem<ak::ArrayBuilder>)
+      // FIXME: refactor
       .def("__iter__", [](const ak::ArrayBuilder& self) -> ak::Iterator {
-        return ak::Iterator(self.snapshot());
+        return ak::Iterator(self.builder().snapshot());
       })
       .def("null", &ak::ArrayBuilder::null)
       .def("boolean", &ak::ArrayBuilder::boolean)
@@ -1009,6 +1013,7 @@ make_ArrayBuilder(const py::handle& m, const std::string& name) {
         self.field_check(x);
       })
       .def("endrecord", &ak::ArrayBuilder::endrecord)
+      // FIXME: refactor
       .def("append",
            [](ak::ArrayBuilder& self,
               const std::shared_ptr<ak::Content>& array,

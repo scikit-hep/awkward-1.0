@@ -758,7 +758,7 @@ namespace awkward {
     }
 
     const ContentPtr snapshot() const {
-      return builder_.snapshot();
+      return builder_.builder().snapshot();
     }
 
   private:

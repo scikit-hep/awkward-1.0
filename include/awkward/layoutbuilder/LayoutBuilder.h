@@ -313,7 +313,7 @@ namespace awkward {
     int64_t length_;
 
     /// @brief Root node of the FormBuilder tree.
-    std::shared_ptr<FormBuilder> builder_;
+    FormBuilderPtr builder_;
 
     /// @brief Virtual machine.
     std::shared_ptr<ForthMachine32> vm_;
