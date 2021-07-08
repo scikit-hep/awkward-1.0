@@ -117,6 +117,12 @@ namespace awkward {
     const BuilderPtr
       append(const ContentPtr& array, int64_t at) override;
 
+    // FIXME: refactor
+    const GrowableBuffer<int64_t>& buffer() const { return index_; }
+
+    // FIXME: refactor
+    const Builder& builder() const { return *content_; }
+
   private:
     const ArrayBuilderOptions options_;
     GrowableBuffer<int64_t> index_;

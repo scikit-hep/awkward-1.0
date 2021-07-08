@@ -4,12 +4,6 @@
 
 #include <stdexcept>
 
-#include "awkward/Identities.h"
-#include "awkward/Index.h"
-#include "awkward/array/RecordArray.h"
-#include "awkward/array/EmptyArray.h"
-#include "awkward/type/RecordType.h"
-#include "awkward/type/UnknownType.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/UnionBuilder.h"
@@ -65,21 +59,9 @@ namespace awkward {
 
   const ContentPtr
   TupleBuilder::snapshot() const {
-    if (length_ == -1) {
-      return std::make_shared<EmptyArray>(Identities::none(),
-                                          util::Parameters());
-    }
-    ContentPtrVec contents;
-    for (size_t i = 0;  i < contents_.size();  i++) {
-      contents.push_back(contents_[i].get()->snapshot());
-    }
-    std::vector<ArrayCachePtr> caches;  // nothing is virtual here
-    return std::make_shared<RecordArray>(Identities::none(),
-                                         util::Parameters(),
-                                         contents,
-                                         util::RecordLookupPtr(nullptr),
-                                         length_,
-                                         caches);
+    throw std::invalid_argument(
+      std::string("called obsolete 'TupleBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

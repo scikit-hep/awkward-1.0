@@ -127,6 +127,12 @@ namespace awkward {
     const BuilderPtr
       append(const ContentPtr& array, int64_t at) override;
 
+    // FIXME: refactor
+    const std::vector<std::string>& keys() const { return keys_; }
+
+    // FIXME: refactor
+    const std::vector<BuilderPtr>& builders() const { return contents_; }
+
   private:
     const BuilderPtr
       field_fast(const char* key);

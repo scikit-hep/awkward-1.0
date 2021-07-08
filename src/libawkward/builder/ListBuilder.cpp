@@ -4,10 +4,6 @@
 
 #include <stdexcept>
 
-#include "awkward/Identities.h"
-#include "awkward/Index.h"
-#include "awkward/array/ListOffsetArray.h"
-#include "awkward/type/ListType.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/UnionBuilder.h"
@@ -54,11 +50,9 @@ namespace awkward {
 
   const ContentPtr
   ListBuilder::snapshot() const {
-    Index64 offsets(offsets_.ptr(), 0, offsets_.length(), kernel::lib::cpu);
-    return std::make_shared<ListOffsetArray64>(Identities::none(),
-                                               util::Parameters(),
-                                               offsets,
-                                               content_.get()->snapshot());
+    throw std::invalid_argument(
+      std::string("called obsolete 'ListBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

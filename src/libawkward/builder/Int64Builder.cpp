@@ -2,9 +2,8 @@
 
 #define FILENAME(line) FILENAME_FOR_EXCEPTIONS("src/libawkward/builder/Int64Builder.cpp", line)
 
-#include "awkward/Identities.h"
-#include "awkward/array/NumpyArray.h"
-#include "awkward/type/PrimitiveType.h"
+#include <stdexcept>
+
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/Complex128Builder.h"
 #include "awkward/builder/Float64Builder.h"
@@ -47,19 +46,9 @@ namespace awkward {
 
   const ContentPtr
   Int64Builder::snapshot() const {
-    std::vector<ssize_t> shape = { (ssize_t)buffer_.length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(int64_t) };
-    return std::make_shared<NumpyArray>(
-             Identities::none(),
-             util::Parameters(),
-             buffer_.ptr(),
-             shape,
-             strides,
-             0,
-             sizeof(int64_t),
-             util::dtype_to_format(util::dtype::int64),
-             util::dtype::int64,
-             kernel::lib::cpu);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ListBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

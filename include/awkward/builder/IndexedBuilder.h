@@ -99,6 +99,13 @@ namespace awkward {
     const BuilderPtr
       endrecord() override;
 
+    // FIXME: refactor
+    const GrowableBuffer<int64_t>& buffer() const { return index_; }
+
+    bool has_null() const { return hasnull_; }
+
+    const std::shared_ptr<T> array() const { return array_; }
+
   protected:
     const ArrayBuilderOptions options_;
     GrowableBuffer<int64_t> index_;
@@ -127,6 +134,8 @@ namespace awkward {
 
     const BuilderPtr
       append(const ContentPtr& array, int64_t at) override;
+
+    const std::shared_ptr<Content> array() const { return array_; }
   };
 
   class IndexedI32Builder: public IndexedBuilder<IndexedArray32> {

@@ -108,6 +108,13 @@ namespace awkward {
     const BuilderPtr
       append(const ContentPtr& array, int64_t at) override;
 
+    // FIXME: re-factor
+    const GrowableBuffer<int8_t>& tags() const {  return tags_; }
+
+    const GrowableBuffer<int64_t>& index() const { return index_; }
+
+    const std::vector<BuilderPtr>& contents() const { return contents_; }
+
   private:
     const ArrayBuilderOptions options_;
     GrowableBuffer<int8_t> tags_;

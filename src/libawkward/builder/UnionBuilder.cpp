@@ -4,9 +4,6 @@
 
 #include <stdexcept>
 
-#include "awkward/Identities.h"
-#include "awkward/Index.h"
-#include "awkward/type/UnionType.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/BoolBuilder.h"
@@ -19,7 +16,6 @@
 #include "awkward/builder/RecordBuilder.h"
 #include "awkward/builder/IndexedBuilder.h"
 #include "awkward/builder/Complex128Builder.h"
-#include "awkward/array/UnionArray.h"
 
 #include "awkward/builder/UnionBuilder.h"
 
@@ -69,17 +65,9 @@ namespace awkward {
 
   const ContentPtr
   UnionBuilder::snapshot() const {
-    Index8 tags(tags_.ptr(), 0, tags_.length(), kernel::lib::cpu);
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    ContentPtrVec contents;
-    for (auto content : contents_) {
-      contents.push_back(content.get()->snapshot());
-    }
-    return UnionArray8_64(Identities::none(),
-                          util::Parameters(),
-                          tags,
-                          index,
-                          contents).simplify_uniontype(true, false);
+    throw std::invalid_argument(
+      std::string("called obsolete 'UnionBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool
