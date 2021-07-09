@@ -47,7 +47,7 @@ namespace awkward {
     /// knowledge.
     void
       clear();
-private:
+
     /// @brief Current high level Type of the accumulated array.
     ///
     /// @param typestrs A mapping from `"__record__"` parameters to string
@@ -67,7 +67,6 @@ private:
     const ContentPtr
       snapshot() const;
 
-public:
     /// @brief Returns the element at a given position in the array, handling
     /// negative indexing and bounds-checking like Python.
     ///

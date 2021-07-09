@@ -14,6 +14,8 @@
 
 #include "awkward/builder/ArrayBuilder.h"
 
+#include "awkward/refactoring.h"
+
 namespace awkward {
   ArrayBuilder::ArrayBuilder(const ArrayBuilderOptions& options)
       : builder_(UnknownBuilder::fromempty(options)) { }
@@ -46,9 +48,8 @@ namespace awkward {
 
   const ContentPtr
   ArrayBuilder::snapshot() const {
-    throw std::invalid_argument(
-      std::string("called obsolete 'ArrayBuilder::snapshot'")
-      + FILENAME(__LINE__));
+    // FIXME: refactor
+    return ::builder_snapshot(builder());
   }
 
   const ContentPtr
