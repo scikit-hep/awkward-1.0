@@ -8,6 +8,7 @@
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/kernels.h"
+#include "awkward/refactoring.h"
 
 namespace py = pybind11;
 namespace ak = awkward;
@@ -40,7 +41,8 @@ std::shared_ptr<ak::Content> producer() {
   builder.string("wow");
   builder.endrecord();
 
-  return builder.builder().snapshot();
+  // FIXME: refactor
+  return ::builder_snapshot(builder.builder());
 }
 
 std::string consumer(const std::shared_ptr<ak::Content>& array) {

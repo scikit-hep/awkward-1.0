@@ -102,8 +102,10 @@ namespace awkward {
     // FIXME: refactor
     const GrowableBuffer<int64_t>& buffer() const { return index_; }
 
-    bool has_null() const { return hasnull_; }
+    // FIXME: refactor
+    bool hasnull() const { return hasnull_; }
 
+    // FIXME: refactor
     const std::shared_ptr<T> array() const { return array_; }
 
   protected:

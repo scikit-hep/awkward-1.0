@@ -7,6 +7,7 @@
 #include "awkward/Slice.h"
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
+#include "awkward/refactoring.h"
 
 namespace ak = awkward;
 
@@ -43,7 +44,8 @@ int main(int, char**) {
   myarray.endrecord();
 
   // take a snapshot
-  std::shared_ptr<ak::Content> array = myarray.builder().snapshot();
+  // FIXME: refactor
+  std::shared_ptr<ak::Content> array = ::builder_snapshot(myarray.builder());
 
   // check output
   if (array.get()->tojson(false,1) != "[{\"one\":true,\"two\":1,\"three\":1.1},{\"one\":false,\"two\":2,\"three\":2.2},{\"one\":true,\"two\":3,\"three\":3.3}]")

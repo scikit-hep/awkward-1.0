@@ -968,205 +968,257 @@ builder_fromiter(ak::ArrayBuilder& self, const py::handle& obj) {
   }
 }
 
-const ak::ContentPtr
-builder_snapshot(const ak::Builder& builder) {
-  ak::ContentPtr out;
-  if (builder.classname() == "BoolBuilder") {
-    const ak::BoolBuilder& raw = dynamic_cast<const ak::BoolBuilder&>(builder);
-    std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(bool) };
-    out = std::make_shared<ak::NumpyArray>(ak::Identities::none(),
-                                           ak::util::Parameters(),
-                                           raw.buffer().ptr(),
-                                           shape,
-                                           strides,
-                                           0,
-                                           sizeof(bool),
-                                           "?",
-                                           ak::util::dtype::boolean,
-                                           ak::kernel::lib::cpu);
+namespace {
+  py::object
+  builder_snapshot(const ak::Builder& builder) {
+    if (builder.classname() == "BoolBuilder") {
+      const ak::BoolBuilder& raw = dynamic_cast<const ak::BoolBuilder&>(builder);
+      std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
+      std::vector<ssize_t> strides = { (ssize_t)sizeof(bool) };
+      int64_t ndim = 1;
 
-  }
-  else if (builder.classname() == "Complex128Builder") {
-    const ak::Complex128Builder& raw = dynamic_cast<const ak::Complex128Builder&>(builder);
-    std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(std::complex<double>) };
-    out = std::make_shared<ak::NumpyArray>(ak::Identities::none(),
-                                           ak::util::Parameters(),
-                                           raw.buffer().ptr(),
-                                           shape,
-                                           strides,
-                                           0,
-                                           sizeof(std::complex<double>),
-                                           "Zd",
-                                           ak::util::dtype::complex128,
-                                           ak::kernel::lib::cpu);
+      return py::module::import("awkward").attr("layout").attr("NumpyArray")(
+        py::array_t<bool>(
+          py::buffer_info(
+            reinterpret_cast<void*>(raw.buffer().ptr().get()),
+            sizeof(bool),
+            ak::util::dtype_to_format(ak::util::dtype::boolean),
+            ndim,
+            shape,
+            strides)));
+    }
+    else if (builder.classname() == "Complex128Builder") {
+      const ak::Complex128Builder& raw = dynamic_cast<const ak::Complex128Builder&>(builder);
+      std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
+      std::vector<ssize_t> strides = { (ssize_t)sizeof(std::complex<double>) };
+      int64_t ndim = 1;
 
-  }
-  else if (builder.classname() == "DatetimeBuilder") {
-    const ak::DatetimeBuilder& raw = dynamic_cast<const ak::DatetimeBuilder&>(builder);
-    std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(int64_t) };
+      return py::module::import("awkward").attr("layout").attr("NumpyArray")(
+        py::array_t<std::complex<double>>(
+          py::buffer_info(
+            reinterpret_cast<void*>(raw.buffer().ptr().get()),
+            sizeof(std::complex<double>),
+            ak::util::dtype_to_format(ak::util::dtype::complex128),
+            ndim,
+            shape,
+            strides)));
+    }
+    else if (builder.classname() == "DatetimeBuilder") {
+      const ak::DatetimeBuilder& raw = dynamic_cast<const ak::DatetimeBuilder&>(builder);
+      std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
+      std::vector<ssize_t> strides = { (ssize_t)sizeof(int64_t) };
 
-    auto dtype = ak::util::name_to_dtype(raw.unit());
-    auto format = std::string(ak::util::dtype_to_format(dtype))
-      .append(std::to_string(ak::util::dtype_to_itemsize(dtype)))
-      .append(ak::util::format_to_units(raw.unit()));
-    out = std::make_shared<ak::NumpyArray>(
-             ak::Identities::none(),
-             ak::util::Parameters(),
-             raw.buffer().ptr(),
-             shape,
-             strides,
-             0,
-             sizeof(int64_t),
-             format,
-             dtype,
-             ak::kernel::lib::cpu);
+      auto dtype = ak::util::name_to_dtype(raw.unit());
+      auto format = std::string(ak::util::dtype_to_format(dtype))
+        .append(std::to_string(ak::util::dtype_to_itemsize(dtype)))
+        .append(ak::util::format_to_units(raw.unit()));
 
-  }
-  else if (builder.classname() == "Float64Builder") {
-    const ak::Float64Builder& raw = dynamic_cast<const ak::Float64Builder&>(builder);
-    std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(double) };
-    out = std::make_shared<ak::NumpyArray>(ak::Identities::none(),
-                                           ak::util::Parameters(),
-                                           raw.buffer().ptr(),
-                                           shape,
-                                           strides,
-                                           0,
-                                           sizeof(double),
-                                           "d",
-                                           ak::util::dtype::float64,
-                                           ak::kernel::lib::cpu);
-  }
-  else if (builder.classname() == "IndexedGenericBuilder") {
-    const ak::IndexedGenericBuilder& raw = dynamic_cast<const ak::IndexedGenericBuilder&>(builder);
-    ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-    if (raw.has_null()) {
-      return std::make_shared<ak::IndexedOptionArray64>(
+      // FIXME: do not go through buffer
+      //
+      // layout = py::module::import("awkward").attr("layout").attr("NumpyArray")(
+      //   py::array_t<int64_t>(py::buffer_info(reinterpret_cast<void*>(raw.buffer().ptr().get()),
+      //   sizeof(int64_t),
+      //   ak::util::dtype_to_format(ak::util::dtype::int64),
+      //   1,
+      //   shape,
+      //   strides)));
+
+      return box(std::make_shared<ak::NumpyArray>(
         ak::Identities::none(),
         ak::util::Parameters(),
-        index,
-        raw.array());
+        raw.buffer().ptr(),
+        shape,
+        strides,
+        0,
+        sizeof(int64_t),
+        format,
+        dtype,
+        ak::kernel::lib::cpu));
     }
-    else {
-      return std::make_shared<ak::IndexedArray64>(
-        ak::Identities::none(),
-        ak::util::Parameters(),
-        index,
-        raw.array());
+    else if (builder.classname() == "Float64Builder") {
+      const ak::Float64Builder& raw = dynamic_cast<const ak::Float64Builder&>(builder);
+      std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
+      std::vector<ssize_t> strides = { (ssize_t)sizeof(double) };
+      int64_t ndim = 1;
+
+      return py::module::import("awkward").attr("layout").attr("NumpyArray")(
+        py::array_t<double>(
+          py::buffer_info(
+            reinterpret_cast<void*>(raw.buffer().ptr().get()),
+            sizeof(double),
+            ak::util::dtype_to_format(ak::util::dtype::float64),
+            ndim,
+            shape,
+            strides)));
     }
-  }
-  else if (builder.classname() == "IndexedI32Builder") {
-    const ak::IndexedI32Builder& raw = dynamic_cast<const ak::IndexedI32Builder&>(builder);
-    ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-    if (raw.has_null()) {
-      return std::make_shared<ak::IndexedOptionArray64>(
-        ak::Identities::none(),
-        raw.array().get()->content().get()->parameters(),
-        index,
-        raw.array().get()->content());
-    }
-    else {
-      return std::make_shared<ak::IndexedArray64>(
-        ak::Identities::none(),
-        raw.array().get()->content().get()->parameters(),
-        index,
-        raw.array().get()->content());
-    }
-  }
-  else if (builder.classname() == "IndexedIU32Builder") {
-    const ak::IndexedIU32Builder& raw = dynamic_cast<const ak::IndexedIU32Builder&>(builder);
-    ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-    if (raw.has_null()) {
-      return std::make_shared<ak::IndexedOptionArray64>(
-          ak::Identities::none(),
-          raw.array().get()->content().get()->parameters(),
-          index,
-          raw.array().get()->content());
-    }
-    else {
-      return std::make_shared<ak::IndexedArray64>(
-        ak::Identities::none(),
-          raw.array().get()->content().get()->parameters(),
-          index,
-          raw.array().get()->content());
-    }
-  }
-  else if (builder.classname() == "IndexedI64Builder") {
-    const ak::IndexedI64Builder& raw = dynamic_cast<const ak::IndexedI64Builder&>(builder);
-      ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-      if (raw.has_null()) {
-        return std::make_shared<ak::IndexedOptionArray64>(
-          ak::Identities::none(),
-          raw.array().get()->content().get()->parameters(),
-          index,
-          raw.array().get()->content());
+    else if (builder.classname() == "IndexedGenericBuilder") {
+      const ak::IndexedGenericBuilder& raw = dynamic_cast<const ak::IndexedGenericBuilder&>(builder);
+
+      if (raw.hasnull()) {
+        return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array()));
       }
       else {
-        return std::make_shared<ak::IndexedArray64>(
-          ak::Identities::none(),
-          raw.array().get()->content().get()->parameters(),
-          index,
-          raw.array().get()->content());
+        return py::module::import("awkward").attr("layout").attr("IndexedArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array()));
+      }
+    }
+    else if (builder.classname() == "IndexedI32Builder") {
+      const ak::IndexedI32Builder& raw = dynamic_cast<const ak::IndexedI32Builder&>(builder);
+
+      if (raw.hasnull()) {
+        return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array().get()->content()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
+      }
+      else {
+        return py::module::import("awkward").attr("layout").attr("IndexedArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
+      }
+    }
+    else if (builder.classname() == "IndexedIU32Builder") {
+      const ak::IndexedIU32Builder& raw = dynamic_cast<const ak::IndexedIU32Builder&>(builder);
+
+      if (raw.hasnull()) {
+        return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array().get()->content()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
+      }
+      else {
+        return py::module::import("awkward").attr("layout").attr("IndexedArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
+      }
+    }
+    else if (builder.classname() == "IndexedI64Builder") {
+      const ak::IndexedI64Builder& raw = dynamic_cast<const ak::IndexedI64Builder&>(builder);
+
+      if (raw.hasnull()) {
+        return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array().get()->content()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
+      }
+      else {
+        return py::module::import("awkward").attr("layout").attr("IndexedArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.buffer().length(),
+              reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+          box(raw.array().get()->content()),
+          py::none(),
+          parameters2dict(raw.array().get()->content().get()->parameters()));
       }
     }
     else if (builder.classname() == "IndexedIO32Builder") {
       const ak::IndexedI64Builder& raw = dynamic_cast<const ak::IndexedI64Builder&>(builder);
-      ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-      return std::make_shared<ak::IndexedOptionArray64>(
-        ak::Identities::none(),
-        raw.array().get()->content().get()->parameters(),
-        index,
-        raw.array().get()->content());
+
+      return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+        py::module::import("awkward").attr("layout").attr("Index64")(
+          py::array_t<int64_t>(
+            raw.buffer().length(),
+            reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+        box(raw.array().get()->content()),
+        py::none(),
+        parameters2dict(raw.array().get()->content().get()->parameters()));
     }
     else if (builder.classname() == "IndexedIO64Builder") {
       const ak::IndexedIO64Builder& raw = dynamic_cast<const ak::IndexedIO64Builder&>(builder);
-      ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-      return std::make_shared<ak::IndexedOptionArray64>(
-        ak::Identities::none(),
-        raw.array().get()->content().get()->parameters(),
-        index,
-        raw.array().get()->content());
+
+      return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+        py::module::import("awkward").attr("layout").attr("Index64")(
+          py::array_t<int64_t>(
+            raw.buffer().length(),
+            reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+        box(raw.array().get()->content()),
+        py::none(),
+        parameters2dict(raw.array().get()->content().get()->parameters()));
     }
     else if (builder.classname() == "Int64Builder") {
       const ak::Int64Builder& raw = dynamic_cast<const ak::Int64Builder&>(builder);
       std::vector<ssize_t> shape = { (ssize_t)raw.buffer().length() };
       std::vector<ssize_t> strides = { (ssize_t)sizeof(int64_t) };
-      return std::make_shared<ak::NumpyArray>(
-               ak::Identities::none(),
-               ak::util::Parameters(),
-               raw.buffer().ptr(),
-               shape,
-               strides,
-               0,
-               sizeof(int64_t),
-               ak::util::dtype_to_format(ak::util::dtype::int64),
-               ak::util::dtype::int64,
-               ak::kernel::lib::cpu);
+      int64_t ndim = 1;
+
+      return py::module::import("awkward").attr("layout").attr("NumpyArray")(
+        py::array_t<double>(
+          py::buffer_info(
+            reinterpret_cast<void*>(raw.buffer().ptr().get()),
+            sizeof(double),
+            ak::util::dtype_to_format(ak::util::dtype::int64),
+            ndim,
+            shape,
+            strides)));
     }
     else if (builder.classname() == "ListBuilder") {
       const ak::ListBuilder& raw = dynamic_cast<const ak::ListBuilder&>(builder);
-      ak::Index64 offsets(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-      return std::make_shared<ak::ListOffsetArray64>(ak::Identities::none(),
-                                                     ak::util::Parameters(),
-                                                     offsets,
-                                                     builder_snapshot(raw.builder()));
+
+      return py::module::import("awkward").attr("layout").attr("ListOffsetArray64")(
+        py::module::import("awkward").attr("layout").attr("Index64")(
+          py::array_t<int64_t>(
+            raw.buffer().length(),
+            reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+        builder_snapshot(raw.builder()));
     }
     else if (builder.classname() == "OptionBuilder") {
       const ak::OptionBuilder& raw = dynamic_cast<const ak::OptionBuilder&>(builder);
+
+      // FIXME: AttributeError: 'awkward._ext.IndexedOptionArray64' object has no attribute 'simplify_optiontype'
+      //
+      // return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+      //   py::module::import("awkward").attr("layout").attr("Index64")(
+      //     py::array_t<int64_t>(
+      //       raw.buffer().length(),
+      //       reinterpret_cast<int64_t*>(raw.buffer().ptr().get())
+      //     )
+      //   ),
+      //   builder_snapshot(raw.builder())
+      // ).attr("simplify_optiontype");
+
       ak::Index64 index(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
-      return ak::IndexedOptionArray64(ak::Identities::none(),
-                                      ak::util::Parameters(),
-                                      index,
-                                      builder_snapshot(raw.builder())).simplify_optiontype();
+      return box(std::make_shared<ak::IndexedOptionArray64>(
+        ak::Identities::none(),
+        ak::util::Parameters(),
+        index,
+        unbox_content(builder_snapshot(raw.builder())))->simplify_optiontype());
     }
     else if (builder.classname() == "RecordBuilder") {
       const ak::RecordBuilder& raw = dynamic_cast<const ak::RecordBuilder&>(builder);
       if (raw.length() == -1) {
-        return std::make_shared<ak::EmptyArray>(ak::Identities::none(),
-                                                ak::util::Parameters());
+        return py::module::import("awkward").attr("layout").attr("EmptyArray")();
       }
       ak::util::Parameters parameters;
       if (raw.nameptr() != nullptr) {
@@ -1176,16 +1228,17 @@ builder_snapshot(const ak::Builder& builder) {
       ak::util::RecordLookupPtr recordlookup =
         std::make_shared<ak::util::RecordLookup>();
       for (size_t i = 0;  i < raw.builders().size();  i++) {
-        contents.push_back(builder_snapshot(*raw.builders()[i]));
+        contents.push_back(unbox_content(builder_snapshot(*raw.builders()[i])));
         recordlookup.get()->push_back(raw.keys()[i]);
       }
       std::vector<ak::ArrayCachePtr> caches;  // nothing is virtual here
-      return std::make_shared<ak::RecordArray>(ak::Identities::none(),
-                                           parameters,
-                                           contents,
-                                           recordlookup,
-                                           raw.length(),
-                                           caches);
+      return box(std::make_shared<ak::RecordArray>(
+        ak::Identities::none(),
+        parameters,
+        contents,
+        recordlookup,
+        raw.length(),
+        caches));
     }
     else if (builder.classname() == "StringBuilder") {
       const ak::StringBuilder& raw = dynamic_cast<const ak::StringBuilder&>(builder);
@@ -1209,39 +1262,48 @@ builder_snapshot(const ak::Builder& builder) {
       ak::Index64 offsets(raw.buffer().ptr(), 0, raw.buffer().length(), ak::kernel::lib::cpu);
       std::vector<ssize_t> shape = { (ssize_t)raw.content().length() };
       std::vector<ssize_t> strides = { (ssize_t)sizeof(uint8_t) };
-      ak::ContentPtr content;
-      content = std::make_shared<ak::NumpyArray>(ak::Identities::none(),
-                                             char_parameters,
-                                             raw.content().ptr(),
-                                             shape,
-                                             strides,
-                                             0,
-                                             sizeof(uint8_t),
-                                             "B",
-                                             ak::util::dtype::uint8,
-                                             ak::kernel::lib::cpu);
-      return std::make_shared<ak::ListOffsetArray64>(ak::Identities::none(),
-                                                 string_parameters,
-                                                 offsets,
-                                                 content);
+      int64_t ndim = 1;
+
+      auto content = py::module::import("awkward").attr("layout").attr("NumpyArray")(
+        py::array_t<uint8_t>(
+          py::buffer_info(
+            reinterpret_cast<void*>(raw.content().ptr().get()),
+            sizeof(uint8_t),
+            ak::util::dtype_to_format(ak::util::dtype::uint8),
+            ndim,
+            shape,
+            strides)),
+          py::none(),
+          parameters2dict(char_parameters));
+
+      return py::module::import("awkward").attr("layout").attr("ListOffsetArray64")(
+        py::module::import("awkward").attr("layout").attr("Index64")(
+          py::array_t<int64_t>(
+            raw.buffer().length(),
+            reinterpret_cast<int64_t*>(raw.buffer().ptr().get()))),
+        content,
+        py::none(),
+        parameters2dict(string_parameters));
     }
     else if (builder.classname() == "TupleBuilder") {
       const ak::TupleBuilder& raw = dynamic_cast<const ak::TupleBuilder&>(builder);
+
       if (raw.length() == -1) {
-        return std::make_shared<ak::EmptyArray>(ak::Identities::none(),
-                                                ak::util::Parameters());
+        return py::module::import("awkward").attr("layout").attr("EmptyArray")();
       }
+
       ak::ContentPtrVec contents;
       for (size_t i = 0;  i < raw.contents().size();  i++) {
-        contents.push_back(builder_snapshot(*raw.contents()[i]));
+        contents.push_back(unbox_content(builder_snapshot(*raw.contents()[i])));
       }
       std::vector<ak::ArrayCachePtr> caches;  // nothing is virtual here
-      return std::make_shared<ak::RecordArray>(ak::Identities::none(),
-                                               ak::util::Parameters(),
-                                               contents,
-                                               ak::util::RecordLookupPtr(nullptr),
-                                               raw.length(),
-                                               caches);
+      return box(std::make_shared<ak::RecordArray>(
+        ak::Identities::none(),
+        ak::util::Parameters(),
+        contents,
+        ak::util::RecordLookupPtr(nullptr),
+        raw.length(),
+        caches));
     }
     else if (builder.classname() == "UnionBuilder") {
       const ak::UnionBuilder& raw = dynamic_cast<const ak::UnionBuilder&>(builder);
@@ -1249,20 +1311,19 @@ builder_snapshot(const ak::Builder& builder) {
       ak::Index64 index(raw.index().ptr(), 0, raw.index().length(), ak::kernel::lib::cpu);
       ak::ContentPtrVec contents;
       for (auto content : raw.contents()) {
-        contents.push_back(builder_snapshot(*content.get()));
+        contents.push_back(unbox_content(builder_snapshot(*content.get())));
       }
-      return ak::UnionArray8_64(ak::Identities::none(),
-                                ak::util::Parameters(),
-                                tags,
-                                index,
-                                contents).simplify_uniontype(true, false);
-
+      return box(ak::UnionArray8_64(
+        ak::Identities::none(),
+        ak::util::Parameters(),
+        tags,
+        index,
+        contents).simplify_uniontype(true, false));
     }
     else if (builder.classname() == "UnknownBuilder") {
       const ak::UnknownBuilder& raw = dynamic_cast<const ak::UnknownBuilder&>(builder);
       if (raw.nullcount() == 0) {
-        return std::make_shared<ak::EmptyArray>(ak::Identities::none(),
-                                                ak::util::Parameters());
+        return py::module::import("awkward").attr("layout").attr("EmptyArray")();
       }
       else {
         // This is the only snapshot that is O(N), rather than O(1),
@@ -1272,21 +1333,26 @@ builder_snapshot(const ak::Builder& builder) {
         for (int64_t i = 0;  i < raw.nullcount();  i++) {
           rawptr[i] = -1;
         }
-        return std::make_shared<ak::IndexedOptionArray64>(
-          ak::Identities::none(),
-          ak::util::Parameters(),
-          index,
-          std::make_shared<ak::EmptyArray>(ak::Identities::none(), ak::util::Parameters()));
+
+        return py::module::import("awkward").attr("layout").attr("IndexedOptionArray64")(
+          py::module::import("awkward").attr("layout").attr("Index64")(
+            py::array_t<int64_t>(
+              raw.nullcount(),
+              reinterpret_cast<int64_t*>(index.ptr().get()))),
+          py::module::import("awkward").attr("layout").attr("EmptyArray")());
+      }
+    }
+    else {
+      throw std::invalid_argument(std::string("unrecognized builder") + FILENAME(__LINE__));
     }
   }
-  return out;
 }
 
 template <>
 py::object
 getitem<ak::ArrayBuilder>(const ak::ArrayBuilder& self, const py::object& obj) {
   if (py::isinstance<py::int_>(obj)) {
-    return box(builder_snapshot(self.builder()).get()->getitem_at(obj.cast<int64_t>()));
+    return box(unbox_content(::builder_snapshot(self.builder())).get()->getitem_at(obj.cast<int64_t>()));
   }
   if (py::isinstance<py::slice>(obj)) {
     py::object pystep = obj.attr("step");
@@ -1302,12 +1368,12 @@ getitem<ak::ArrayBuilder>(const ak::ArrayBuilder& self, const py::object& obj) {
       if (!pystop.is(py::none())) {
         stop = pystop.cast<int64_t>();
       }
-      return box(builder_snapshot(self.builder()).get()->getitem_range(start, stop));
+      return box(unbox_content(::builder_snapshot(self.builder())).get()->getitem_range(start, stop));
     }
     // control flow can pass through here; don't make the last line an 'else'!
   }
   if (py::isinstance<py::str>(obj)) {
-    return box(builder_snapshot(self.builder()).get()->getitem_field(obj.cast<std::string>()));
+    return box(unbox_content(::builder_snapshot(self.builder())).get()->getitem_field(obj.cast<std::string>()));
   }
   if (!py::isinstance<py::tuple>(obj)  &&  py::isinstance<py::iterable>(obj)) {
     std::vector<std::string> strings;
@@ -1322,11 +1388,11 @@ getitem<ak::ArrayBuilder>(const ak::ArrayBuilder& self, const py::object& obj) {
       }
     }
     if (all_strings  &&  !strings.empty()) {
-      return box(builder_snapshot(self.builder()).get()->getitem_fields(strings));
+      return box(unbox_content(::builder_snapshot(self.builder())).get()->getitem_fields(strings));
     }
     // control flow can pass through here; don't make the last line an 'else'!
   }
-  return box(builder_snapshot(self.builder()).get()->getitem(toslice(obj)));
+  return box(unbox_content(::builder_snapshot(self.builder())).get()->getitem(toslice(obj)));
 }
 
 py::class_<ak::ArrayBuilder>
@@ -1344,15 +1410,16 @@ make_ArrayBuilder(const py::handle& m, const std::string& name) {
       .def("clear", &ak::ArrayBuilder::clear)
       // FIXME: refactor
       .def("type", [](const ak::ArrayBuilder& self, const std::map<std::string, std::string>& typestrs) -> std::shared_ptr<ak::Type> {
-        return builder_snapshot(self.builder())->type(typestrs);
+        return unbox_content(::builder_snapshot(self.builder()))->type(typestrs);
       })
+      // FIXME: refactor
       .def("snapshot", [](const ak::ArrayBuilder& self) -> py::object {
-        return box(builder_snapshot(self.builder()));
+        return ::builder_snapshot(self.builder());
       })
       .def("__getitem__", &getitem<ak::ArrayBuilder>)
       // FIXME: refactor
       .def("__iter__", [](const ak::ArrayBuilder& self) -> ak::Iterator {
-        return ak::Iterator(builder_snapshot(self.builder()));
+        return ak::Iterator(unbox_content(::builder_snapshot(self.builder())));
       })
       .def("null", &ak::ArrayBuilder::null)
       .def("boolean", &ak::ArrayBuilder::boolean)
