@@ -1,0 +1,1383 @@
+{
+    "awkward_IndexedArray_validity":[
+    {
+        "inputs": [[0,1,2,3,4,5,6,7,8,9],0,10,true],
+        "output": null,
+        "except":false,
+        "unsigned":false
+    },
+    {
+        "inputs": [[-1, 0, 0, 1, 1, 1, 0, 0, 5, 0, 1, 5, 1, 1],10,5,false],
+        "output": "ValueError",
+        "except":true,
+        "unsigned":true
+    },
+    {
+        "inputs": [[1, 0, 0, 1, 7, 11, 0, 0, 8, 9, 1, 0, 1, 1],10,6,false],
+        "output": "ValueError",
+        "except":true,
+        "unsigned":false
+    },
+    {
+        "inputs": [[-1, 0, 0, 1, 6, -2, 0, 0, 5, 0, 1, 0, 1, 1],10,7,true],
+        "output": null,
+        "except":false,
+        "unsigned":true
+    },
+    {
+        "inputs": [[1, 0, 0, 1, 4, 1, 8, 0, 5, 9, 1, 0, 1, 1],10,6,false],
+        "output": "ValueError",
+        "except":true,
+        "unsigned":false
+    },
+    {
+        "inputs": [[1,-10, 0, 1, -7, 1, 0, 0, 5, 0, 1, 0, 1, 1],10,6,true],
+        "output": null,
+        "except":false,
+        "unsigned":true
+    },
+    {
+        "inputs": [[1,-10, 0, 1, -7, 1, 0, 0, 5, 0, 1, 0, 1, 1],10,6,true],
+        "output": null,
+        "except":false,
+        "unsigned":true
+    }
+    ],
+
+    "awkward_IndexedArray_fill":[
+    {
+    "toindex":[123, 123, 123, 123, 123, 123],
+    "toindexoffset":3,
+    "fromindex":[1, 2, 2, 3, 0, 2, 0, 2, 1, 1],
+    "length":3,
+    "base":2,
+    "output": {
+    "toindex":[123, 123, 123, 3.0, 4.0, 4.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123, 123, 123, 123,123,123],
+    "toindexoffset":3,
+    "fromindex":[1, 2, 2, 3, 0, 2, 0, 2, 1, 1,5,7,4,10,4,8,4],
+    "length":5,
+    "base":2,
+    "output": {
+    "toindex":[123, 123, 123, 3.0, 4.0, 4.0, 5.0, 2.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123, 123, 123, 123,123,123],
+    "toindexoffset":3,
+    "fromindex":[-1, 2, 2, -10, 0, 2, 0, -20, 1, 1,-5],
+    "length":5,
+    "base":2,
+    "output": {
+    "toindex":[123, 123, 123, -1, 4.0, 4.0, -1, 2.0]
+    },
+    "except":false,
+    "unsigned":true
+    }
+    ],
+
+    "awkward_IndexedArray_getitem_adjust_outindex":[
+    {
+    "tomask":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "tononzero":[123,123,123,123,123,123],
+    "fromindex":[-1, -1, -2, -2, -1, -1],
+    "fromindexlength":6,
+    "nonzero":[-1, 1, -1, 1, 1, 1, 1, 1, 1, 1],
+    "nonzerolength":10,
+    "output":{
+    "tomask":[true, true, true, true, true, true],
+    "toindex":[-1, -1, -1, -1, -1, -1]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tomask":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "tononzero":[123,123,123,123,123,123],
+    "fromindex":[1, 2, 3, 2, 4, 0],
+    "fromindexlength":6,
+    "nonzero":[-1, 1, -1, 1, 1, 1, 1, 1, 1, 1],
+    "nonzerolength":10,
+    "output":{
+    "tomask":[false, false, false, false, false, false]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tomask":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "tononzero":[123,123,123,123,123,123],
+    "fromindex":[1, 2, 3, 2, 4, 0],
+    "fromindexlength":6,
+    "nonzero":[-1, 1, -1, 1, 2, 1, 4, 1, 1, 1],
+    "nonzerolength":10,
+    "output":{
+    "tomask":[false, false, false, false, false, false]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tomask":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "tononzero":[123,123,123,123,123,123],
+    "fromindex":[1, 2, 3, 2, 4, 0],
+    "fromindexlength":6,
+    "nonzero":[1, 2, 3, 2, 4, 0],
+    "nonzerolength":6,
+    "output":{
+    "tomask":[false, false, false, false, false, false],
+    "toindex":[0, 1, 2, 3, 4, 5],
+    "tononzero":[1, 2, 3, 2, 4, 0]
+    },
+    "except":false,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_flatten_nextcarry":[
+    {
+    "tocarry":[123,123,123],
+    "fromindex":[1, 4, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+    "lenindex":3,
+    "lencontent":3,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123, 123, 123,123,123,123],
+    "fromindex":[1, -2, 0, 1, 1, 1, -5, 0, 1, 0, 1, 0, 1, 1],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 0, 1, 1, 1, 123]
+    },
+    "except":false,
+    "unsigned":true
+    },
+    {
+    "tocarry":[123, 123, 123,123,123,123],
+    "fromindex":[1, 0, 0, 1, 1, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 0, 0, 1, 1, 1]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123, 123, 123,123,123,123],
+    "fromindex":[1, 5, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 5, 3, 4, 5, 1]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "lenindex":6,
+    "lencontent":6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_flatten_none2empty":[
+    {
+    "outoffsets":[123, 123, 123, 123],
+    "outindex":[2, 2, 2, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+    "outindexlength": 3,
+    "offsets":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "offsetslength":3,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "outoffsets":[123, 123, 123, 123],
+    "outindex":[1, 4, 5, 1, 1, 1, 5, 0, 6, 0, 1, 0, 1, 1],
+    "outindexlength": 3,
+    "offsets":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "offsetslength":3,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "outoffsets":[123, 123, 123, 123],
+    "outindex":[-1, -4, 1, -1, 1, -1, -5, 0, -6, 0, 1, 0, 1, 1],
+    "outindexlength": 3,
+    "offsets":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "offsetslength":3,
+    "output":{
+    "outoffsets":[1, 1, 1, 1]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "outoffsets":[123, 123, 123, 123],
+    "outindex":[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+    "outindexlength": 3,
+    "offsets":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "offsetslength":3,
+    "output":{
+    "outoffsets":[1, 1, 1, 1]
+    },
+    "except":false,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_getitem_carry":[
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [6,5,1,1,1,1,1,1,1],
+    "lenindex": 6,
+    "lencarry": 6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [1,0,1,7,9,1,1,1,1],
+    "lenindex": 6,
+    "lencarry": 6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [1,0,1,-2,0,1,1,1,1],
+    "lenindex": 6,
+    "lencarry": 6,
+    "output":{
+    "toindex":[6.0, 1.0, 6.0, 1.0, 1.0, 6.0]
+    },
+    "except":false,
+    "unsigned":true
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [0,0,0,0,0,0,0,0,0],
+    "lenindex": 6,
+    "lencarry": 6,
+    "output":{
+    "toindex":[1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [4,1,0,0,1,3,6,0,0],
+    "lenindex": 5,
+    "lencarry": 6,
+    "output":{
+    "toindex":[5.0, 6.0, 1.0, 1.0, 6.0, 4.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [4,1,4,0,1,3,6,0,0],
+    "lenindex": 5,
+    "lencarry": 6,
+    "output":{
+    "toindex":[5.0, 6.0, 5.0, 1.0, 6.0, 4.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "toindex":[123, 123, 123,123,123,123],
+    "fromindex":[1, 6, 3, 4, 5, 1, 2, 0, 1, 0, 1, 0, 1, 1],
+    "fromcarry": [4,1,6,0,9,3,6,0,0],
+    "lenindex": 5,
+    "lencarry": 6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_getitem_nextcarry":[
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "fromindex":[1, 2, 2, 2, 0, 2, 0, 2, 1, 1],
+    "lenindex":6,
+    "lencontent":4,
+    "output":{
+    "tocarry":[1, 2, 2, 2, 0, 2]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "fromindex":[1, 2, -2, 2, 0, 2, 0, 2, 1, 1],
+    "lenindex":6,
+    "lencontent":4,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":true
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "fromindex":[1, 2, 2, 4, 0, 2, 3, 2, 4, 1],
+    "lenindex":6,
+    "lencontent":4,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "fromindex":[1, 5, 2, 4, 0, 7, 3, 2, 4, 10],
+    "lenindex":6,
+    "lencontent":4,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_getitem_nextcarry_outindex":[
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "fromindex":[1, 5, 2, 4, 6, 4, 3, 2, 4, 4],
+    "lenindex":6,
+    "lencontent":6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "fromindex":[1, 5, 2, 4, 6, 4, 7, 2, 4, 9],
+    "lenindex":6,
+    "lencontent":6,
+    "output":"ValueError",
+    "except":true,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "fromindex":[1, 5, 2, 4, 5, 4, -7, 2, 4, -9],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 5, 2, 4, 5, 4],
+    "toindex":[0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    },
+    "except":false,
+    "unsigned":true
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "fromindex":[1, 0, 2, 0, 0, 4, 0, 2, 4, 0],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 0, 2, 0, 0, 4],
+    "toindex":[0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tocarry":[123,123,123,123,123,123],
+    "toindex":[123,123,123,123,123,123],
+    "fromindex":[1, 1, 2, 5, 3, 4, 5, 2, 4, 3],
+    "lenindex":6,
+    "lencontent":6,
+    "output":{
+    "tocarry":[1, 1, 2, 5, 3, 4],
+    "toindex":[0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    },
+    "except":false,
+    "unsigned":false
+    }
+    ],
+    "awkward_IndexedArray_getitem_nextcarry_outindex_mask":[
+    {
+
+    }
+    ],
+    "awkward_IndexedArray_mask":[
+    {
+    "tomask":[123,123,123,123,123,123,123,123,123,123],
+    "fromindex":[1, 1, 2, 5, 3, 4, 5, 2, 4, 3],
+    "length":10,
+    "output":{
+    "tomask":[false, false, false, false, false, false, false, false, false, false]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tomask":[123,123,123,123,123,123,123,123,123,123],
+    "fromindex":[1, 1, 0, 5, 0, 0, 0, 0, 4, 0],
+    "length":10,
+    "output":{
+    "tomask":[false, false, false, false, false, false, false, false, false, false]
+    },
+    "except":false,
+    "unsigned":false
+    },
+    {
+    "tomask":[123,123,123,123,123,123,123,123,123,123],
+    "fromindex":[1, 1, -4, -5, 3,-10, 7, 3, -4, 9],
+    "length":10,
+    "output":{
+    "tomask":[false, false, true, true, false, true, false, false, true, false]
+    },
+    "except":false,
+    "unsigned":true
+    }
+    ],
+    "awkward_IndexedArray_numnull":[
+        {
+            "numnull":[123],
+            "fromindex":[1, 1, -4, -5, 3,-10, 7, 3, -4, 9],
+            "lenindex":10,
+            "output":{
+                "numnull":[4]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "numnull":[123],
+            "fromindex":[1, 1, 0, -5, 3,0, 7, 0, -4, 9],
+            "lenindex":10,
+            "output":{
+                "numnull":[2]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "numnull":[123],
+            "fromindex":[1, 1, 3, 5, 3,0, 7, 2, 1, 9],
+            "lenindex":10,
+            "output":{
+                "numnull":[0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "numnull":[123],
+            "fromindex":[-1, -1, -3, -5, -3,-6, -7, -2, -1, -9],
+            "lenindex":10,
+            "output":{
+                "numnull":[10]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "numnull":[123],
+            "fromindex":[0,0,0,0,0,0,0,0,0,0],
+            "lenindex":10,
+            "output":{
+                "numnull":[0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "numnull":[123],
+            "fromindex":[3,3,3,3,3],
+            "lenindex":5,
+            "output":{
+                "numnull":[0]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_IndexedArray_simplify":[
+        {
+            "toindex":[123,123,123,123,123,123,123],
+            "outerindex":[1, 3, 3, 1, 1, 1],
+            "outerlength":3,
+            "innerindex":[1, 0, 0, 1, 1, 1],
+            "innerlength":2,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+            "toindex":[123,123,123,123,123,123,123],
+            "outerindex":[1, 2, 4, 4, 1, 1],
+            "outerlength":3,
+            "innerindex":[1, 0, 0, 1, 1, 1],
+            "innerlength":2,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        }
+    ],
+    "awkward_BitMaskedArray_to_ByteMaskedArray":[
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[1, 1, 1, 1, 1],
+            "bitmasklength":3,
+            "validwhen":true,
+            "lsb_order":false,
+            "output":{
+                "tobytemask":[true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[1, 1, 1, 1, 1],
+            "bitmasklength":3,
+            "validwhen":false,
+            "lsb_order":true,
+            "output":{
+                "tobytemask":[true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[1, 1, 1, 1, 1],
+            "bitmasklength":3,
+            "validwhen":true,
+            "lsb_order":true,
+            "output":{
+                "tobytemask":[false, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[1, 1, 1, 1, 1],
+            "bitmasklength":3,
+            "validwhen":false,
+            "lsb_order":false,
+            "output":{
+                "tobytemask":[false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[1, 1, 1, 1, 1],
+            "bitmasklength":3,
+            "validwhen":true,
+            "lsb_order":false,
+            "output":{
+                "tobytemask":[true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tobytemask":[123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123, 123,123],
+            "frombitmask":[0, 0, 0, 0, 0],
+            "bitmasklength":3,
+            "validwhen":true,
+            "lsb_order":false,
+            "output":{
+                "tobytemask":[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_BitMaskedArray_to_IndexedOptionArray":[
+        {
+
+        }
+    ],
+    "awkward_ByteMaskedArray_getitem_carry":[
+        {
+            "tomask":[123,123,123,123,123,123],
+            "frommask":[0, 0, 0, 0, 0],
+            "lenmask":5,
+            "fromcarry":[1, 5, 0, 1, 5, 1, 5, 0, 1, 0, 1, 0, 1, 1],
+            "lencarry":6,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+            "tomask":[123,123,123,123,123,123],
+            "frommask":[0, 0, 0, 0, 0],
+            "lenmask":5,
+            "fromcarry":[1, 3, 0, 1, 7, 1, 5, 8, 1, 0, 1, 0, 1, 1],
+            "lencarry":6,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+            "tomask":[123,123,123,123,123,123],
+            "frommask":[2, 0, 4, 0, 0],
+            "lenmask":5,
+            "fromcarry":[0, 3, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+            "lencarry":6,
+            "output":{
+                "tomask":[2, 0, 2, 0, 2, 0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tomask":[123,123,123,123,123,123],
+            "frommask":[2, 0, 4, 0, 0],
+            "lenmask":5,
+            "fromcarry":[0, 3, 4, 1, 0, 1, 4, 0, 1, 4, 1, 0, 1, 1],
+            "lencarry":6,
+            "output":{
+                "tomask":[2, 0, 0, 0, 2, 0]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ByteMaskedArray_getitem_nextcarry":[
+        {
+            "tocarry":[123, 123, 123],
+            "mask":[1, 0, 0, 1, 1],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "tocarry":[0, 123, 123]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "mask":[1, 1, 2, 1, 1],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "tocarry":[0, 1, 2]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "mask":[1, 1, 2, 1, 1],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "tocarry":[123, 123, 123]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "mask":[0, 0, 2, 1, 1],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "tocarry":[0, 1, 123]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ByteMaskedArray_getitem_nextcarry_outindex":[
+        {
+            "tocarry":[123, 123, 123],
+            "outindex":[123, 123, 123],
+            "mask":[1, 1, 1, 1, 1],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "tocarry":[0, 1, 2],
+                "outindex":[0.0, 1.0, 2.0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "outindex":[123, 123, 123],
+            "mask":[0, 0, 0, 1, 1],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "outindex":[-1, -1, -1]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "outindex":[123, 123, 123],
+            "mask":[0, 0, 0, 1, 1],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "tocarry":[0, 1, 2],
+                "outindex":[0.0, 1.0, 2.0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123, 123, 123],
+            "outindex":[123, 123, 123],
+            "mask":[2, 1, 5, 1, 1],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "outindex":[-1, -1, -1]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ByteMaskedArray_mask":[
+        {
+            "tomask":[123, 123, 123],
+            "frommask":[0, 0, 0],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "tomask":[true, true, true]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tomask":[123, 123, 123],
+            "frommask":[2, 1, 3],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "tomask":[false, false, false]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tomask":[123, 123, 123],
+            "frommask":[0, 3, 0],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "tomask":[false, true, false]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tomask":[123, 123, 123],
+            "frommask":[2, 3, 0],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "tomask":[true, true, false]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ByteMaskedArray_numnull":[
+        {
+            "numnull":[123],
+            "mask":[0, 0, 0],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "numnull":[3]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "numnull":[123],
+            "mask":[2, 1, 3],
+            "length":3,
+            "validwhen":true,
+            "output":{
+                "numnull":[0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "numnull":[123],
+            "mask":[2, 1, 3],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "numnull":[3]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "numnull":[123],
+            "mask":[0, 0, 0],
+            "length":3,
+            "validwhen":false,
+            "output":{
+                "numnull":[0]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ByteMaskedArray_overlay_mask":[
+        {
+
+        }
+    ],
+    "awkward_ByteMaskedArray_toIndexedOptionArray":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_fill":[
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":0,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":0,
+            "fromstarts":[2, 0, 2, 1, 2, 1],
+            "fromstops":[3, 2, 4, 5, 3, 4],
+            "length":6,
+            "base":3,
+            "output":{
+                "tostarts":[5.0, 3.0, 5.0, 4.0, 5.0, 4.0],
+                "tostops":[6.0, 5.0, 7.0, 8.0, 6.0, 7.0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":0,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":0,
+            "fromstarts":[0, 0, 0, 0, 0, 0],
+            "fromstops":[0, 0, 0, 0, 0, 0],
+            "length":3,
+            "base":3,
+            "output":{
+                "tostarts":[3.0, 3.0, 3.0, 123, 123, 123],
+                "tostops":[3.0, 3.0, 3.0, 123, 123, 123]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":0,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":0,
+            "fromstarts":[0, 0, 0, 0, 0, 0],
+            "fromstops":[0, 0, 0, 0, 0, 0],
+            "length":6,
+            "base":3,
+            "output":{
+                "tostarts":[3.0, 3.0, 3.0, 3.0, 3.0, 3.0],
+                "tostops":[3.0, 3.0, 3.0, 3.0, 3.0, 3.0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":0,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":0,
+            "fromstarts":[1, 2, 3, 4, 5, 6],
+            "fromstops":[-4, 4, 2, -3, 7, 5],
+            "length":6,
+            "base":3,
+            "output":{
+                "tostarts":[4.0, 5.0, 6.0, 7.0, 8.0, 9.0],
+                "tostops":[-1.0, 7.0, 5.0, 0.0, 10.0, 8.0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":3,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":3,
+            "fromstarts":[1, 2, 3, -4, 5, -6],
+            "fromstops":[-4, -7, 2, -3, 7, 5],
+            "length":3,
+            "base":3,
+            "output":{
+                "tostarts":[123, 123, 123, 4.0, 5.0, 6.0],
+                "tostops":[123, 123, 123, -1.0, -4.0, 5.0]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tostarts":[123, 123, 123, 123, 123, 123],
+            "tostartsoffset":2,
+            "tostops":[123, 123, 123, 123, 123, 123],
+            "tostopsoffset":2,
+            "fromstarts":[1, 2, 3, -4, 5, -6],
+            "fromstops":[-4, -7, 2, -3, 7, 5],
+            "length":2,
+            "base":3,
+            "output":{
+                "tostarts":[123, 123, 4.0, 5.0, 123, 123],
+                "tostops":[123, 123, -1.0, -4.0, 123, 123]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ListArray_getitem_jagged_carrylen":[
+        {
+            "carrylen":[123],
+            "slicestarts":[0,0,0,0,0,0],
+            "slicestops":[0,0,0,0,0,0],
+            "slicecounterlen":3,
+            "output":{
+                "carrylen":[0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "carrylen":[123],
+            "slicestarts":[2,4,7,5,4,3],
+            "slicestops":[2,4,7,5,4,3],
+            "slicecounterlen":3,
+            "output":{
+                "carrylen":[0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "carrylen":[123],
+            "slicestarts":[0,0,7,5,4,3],
+            "slicestops":[3,3,7,5,4,3],
+            "slicecounterlen":3,
+            "output":{
+                "carrylen":[6]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "carrylen":[123],
+            "slicestarts":[0,0,0,5,4,3],
+            "slicestops":[2,2,2,5,4,3],
+            "slicecounterlen":6,
+            "output":{
+                "carrylen":[6]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "carrylen":[123],
+            "slicestarts":[4,4,0,5,4,3],
+            "slicestops":[6,6,2,5,6,3],
+            "slicecounterlen":6,
+            "output":{
+                "carrylen":[8]
+            },
+            "except":false,
+            "unsigned":true
+        }
+    ],
+    "awkward_ListArray_getitem_jagged_shrink":[
+        {
+            "tocarry":[123, 123, 123, 123, 123],
+            "tosmalloffsets":[123, 123, 123, 123],
+            "tolargeoffsets":[123, 123, 123, 123],
+            "slicestarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "slicestops":[3, 2, 4, 5, 3, 4, 2, 5, 3, 4, 6, 11],
+            "length":0,
+            "missing":[1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+            "output":{
+                "tosmalloffsets":[0, 123, 123, 123],
+                "tolargeoffsets":[0, 123, 123, 123]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tocarry":[123, 123, 123, 123, 123],
+            "tosmalloffsets":[123, 123, 123, 123],
+            "tolargeoffsets":[123, 123, 123, 123],
+            "slicestarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "slicestops":[2, 0, 2, 5, 3, 4, 2, 5, 3, 4, 6, 11],
+            "length":0,
+            "missing":[1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1],
+            "output":{
+                "tosmalloffsets":[0, 123, 123, 123],
+                "tolargeoffsets":[0, 123, 123, 123]
+            },
+            "except":false,
+            "unsigned":true
+        }
+    ],
+    "awkward_ListArray_broadcast_tooffsets":[
+        {
+            "tocarry":[123],
+            "fromoffsets":[2, 3, 3, 4, 5, 5, 5, 5, 5, 6, 7, 8, 10, 11],
+            "offsetslength":3,
+            "fromstarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "fromstops":[2, 0, 2, 1, 3, 4, 2, 5, 3, 4, 6, 11],
+            "lencontent":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+            "tocarry":[123],
+            "fromoffsets":[2, 3, 3, 4, 5, 5, 5, 5, 5, 6, 7, 8, 10, 11],
+            "offsetslength":3,
+            "fromstarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "fromstops":[4, 0, 2, 5, 3, 4, 2, 5, 3, 4, 6, 11],
+            "lencontent":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+
+            "tocarry":[123],
+            "fromoffsets":[2, -3, -3, 4, 5, 5, 5, 5, 5, 6, 7, 8, 10, 11],
+            "offsetslength":3,
+            "fromstarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "fromstops":[4, 0, 2, 5, 3, 4, 2, 5, 3, 4, 6, 11],
+            "lencontent":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":false
+        },
+        {
+
+            "tocarry":[123,123],
+            "fromoffsets":[2, 3, 4, 5, 6, 7, 8, 2, 5, 6, 7, 8, 10, 11],
+            "offsetslength":3,
+            "fromstarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "fromstops":[3, 1, 3, 2, 3, 2, 3, 2, 3, 4, 6, 11],
+            "lencontent":3,
+            "output":{
+                "tocarry":[2.0, 0.0]
+            },
+            "except":false,
+            "unsigned":true
+        }
+
+    ],
+    "awkward_ListArray_combinations_length":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_compact_offsets":[
+        {
+            "tooffsets":[123, 123, 123, 123],
+            "fromstarts":[2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+            "fromstops":[1, 2, 4, 5, 3, 4, 2, 5, 3, 4, 6, 11],
+            "length":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123, 123, 123, 123],
+            "fromstarts":[0,0,0,0],
+            "fromstops":[0,0,0,0],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 0, 0, 0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123, 123, 123, 123],
+            "fromstarts":[1,2,3,4],
+            "fromstops":[2,5,7,9],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 1, 4, 8]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123, 123, 123, 123],
+            "fromstarts":[1,2,3,4],
+            "fromstops":[4,5,6,7],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 3, 6, 9]
+            },
+            "except":false,
+            "unsigned":true
+        }
+    ],
+    "awkward_ListArray_getitem_carry":[
+        {
+            "tostarts":[123, 123, 123],
+            "tostops":[123, 123, 123],
+            "fromstarts":[2, 0, 2, 1, 2],
+            "fromstops":[3, 2, 4, 5, 3],
+            "fromcarry":[0, 1, 2, 1, 1],
+            "lenstarts":5,
+            "lencarry":3,
+            "output":{
+                "tostarts":[2.0, 0.0, 2.0],
+                "tostops":[3.0, 2.0, 4.0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tostarts":[123, 123, 123],
+            "tostops":[123, 123, 123],
+            "fromstarts":[2, 0, 2, 1, 2],
+            "fromstops":[3, 2, 4, 5, 3],
+            "fromcarry":[6, 7, 8, 9, 10],
+            "lenstarts":5,
+            "lencarry":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":true
+        },
+        {
+            "tostarts":[123, 123, 123],
+            "tostops":[123, 123, 123],
+            "fromstarts":[2, 0, 2, 1, 2],
+            "fromstops":[3, 2, 4, 5, 3],
+            "fromcarry":[5, 5, 5, 5, 5],
+            "lenstarts":5,
+            "lencarry":3,
+            "output":"ValueError",
+            "except":true,
+            "unsigned":true
+        }
+    ],
+    "awkward_ListArray_getitem_jagged_apply":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_jagged_descend":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_jagged_expand":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_next_array":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_next_array_advanced":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_next_at":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_getitem_next_range_counts":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_localindex":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_min_range":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_num":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_rpad_and_clip_length_axis1":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_rpad_axis1":[
+        {
+
+        }
+    ],
+    "awkward_ListArray_validity":[
+        {
+
+        }
+    ],
+    "awkward_ListOffsetArray_compact_offsets":[
+        {
+            "tooffsets":[123,123,123,123],
+            "fromoffsets":[0,0,0,0,0,0],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 0, 0, 0]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "fromoffsets":[1,3,6,2,1,6],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 2, 5, 1]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "fromoffsets":[-1,-3,-6,-2,-1,-6],
+            "length":3,
+            "output":{
+                "tooffsets":[0, -2, -5, -1]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "fromoffsets":[-2,-1,0,1,2,3],
+            "length":3,
+            "output":{
+                "tooffsets":[0, 1, 2, 3]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "fromoffsets":[2,1,0,-1,-2,-3],
+            "length":3,
+            "output":{
+                "tooffsets":[0, -1, -2, -3]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ListOffsetArray_flatten_offsets":[
+        {
+            "tooffsets":[123,123,123,123],
+            "outeroffsets":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "outeroffsetslen":4,
+            "inneroffsets":[4, 2, 3, 4, 2, 5, 6, 2, 9, 4],
+            "inneroffsetslen":4,
+            "output":{
+                "tooffsets":[4, 4, 4, 4]
+            },
+            "except":false,
+            "unsigned":true
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "outeroffsets":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "outeroffsetslen":4,
+            "inneroffsets":[-4, -2, -3, -4, -2, -5, -6, -2, -9, -4],
+            "inneroffsetslen":4,
+            "output":{
+                "tooffsets":[-4, -4, -4, -4]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "outeroffsets":[9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            "outeroffsetslen":4,
+            "inneroffsets":[-4, -2, -3, -4, -2, -5, -6, -2, -9, -6],
+            "inneroffsetslen":4,
+            "output":{
+                "tooffsets":[-6, -6, -6, -6]
+            },
+            "except":false,
+            "unsigned":false
+        },
+        {
+            "tooffsets":[123,123,123,123],
+            "outeroffsets":[9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            "outeroffsetslen":4,
+            "inneroffsets":[4, 2, 3, 4, 2, 5, 6, 2, 9, 6],
+            "inneroffsetslen":4,
+            "output":{
+                "tooffsets":[6, 6, 6, 6]
+            },
+            "except":false,
+            "unsigned":false
+        }
+    ],
+    "awkward_ListOffsetArray_getitem_adjust_offsets":[
+        {
+
+        }
+    ],
+    "awkward_ListOffsetArray_getitem_adjust_offsets_index":[
+        {
+
+        }
+    ],
+    "awkward_ListOffsetArray_toRegularArray":[
+        {
+
+        }
+    ]
+}
