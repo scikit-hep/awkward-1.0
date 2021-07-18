@@ -7,10 +7,13 @@ import json
 import collections
 import math
 import os
+import posixpath
 import threading
 import distutils.version
 import glob
 import re
+
+import pyarrow.dataset
 
 try:
     from collections.abc import Iterable, Sized
@@ -3449,6 +3452,79 @@ class _Dataset(object):
         return batches
 
 
+class _ArrowDataset(_Dataset):
+    def __init__(
+        self,
+        dataset,
+        row_groups=None,
+        columns=None,
+        use_threads=True,
+        include_partition_columns=True,
+    ):
+        # Switch factory according to source type
+        self._dataset = dataset
+
+        self._fragments = [
+            g for f in self._dataset.get_fragments() for g in f.split_by_row_group()
+        ]
+        if row_groups is None:
+            row_groups = range(len(self._fragments))
+
+        # Load schema
+        schema = self._dataset.schema
+        if columns is None:
+            columns = schema.names
+        schema = _partial_schema_from_columns(schema, columns)
+
+        self._use_threads = use_threads
+
+        # Resolve file-system partitioning
+        if include_partition_columns:
+            partition_columns = _parquet_partitions_to_awkward(
+                self._get_paths_and_counts(self._fragments, row_groups)
+            )
+        else:
+            partition_columns = []
+
+        super(_ArrowDataset, self).__init__(
+            schema, row_groups, columns, partition_columns
+        )
+
+    @staticmethod
+    def _get_paths_and_counts(fragments, row_groups):
+        paths_and_counts = []
+        last_filename = None
+        for i in row_groups:
+            fragment = fragments[i]
+            row_group = fragment.row_groups[0]
+            filename = fragment.path
+            if last_filename is None:
+                if filename == "":
+                    raise ValueError(
+                        "Dataset fragment does not contain file paths "
+                        "(e.g. was not made with 'set_file_path')"
+                        + ak._util.exception_suffix(__file__)
+                    )
+                last_filename = filename
+                paths_and_counts.append([filename, 0])
+            elif filename != "" and last_filename != filename:
+                last_filename = filename
+                paths_and_counts.append([filename, 0])
+            paths_and_counts[-1][-1] += row_group.num_rows
+        return paths_and_counts
+
+    @property
+    def row_group_metadata(self):
+        return [self._fragments[i].row_groups[0] for i in self.row_groups]
+
+    def read_row_group(self, row_group, columns=None):
+        if columns is None:
+            columns = self.columns
+
+        fragment = self._fragments[row_group]
+        return fragment.to_table(use_threads=self._use_threads, columns=columns)
+
+
 class _ParquetFileDataset(_Dataset):
     def __init__(
         self, source, row_groups=None, columns=None, use_threads=True, options=None
@@ -3483,184 +3559,6 @@ class _ParquetFileDataset(_Dataset):
 
         return self._file.read_row_group(
             row_group, columns=columns, use_threads=self._use_threads
-        )
-
-
-class _ParquetDataset(_Dataset):
-    def __init__(
-        self,
-        directory,
-        metadata_filename,
-        row_groups=None,
-        columns=None,
-        use_threads=True,
-        include_partition_columns=True,
-        options=None,
-    ):
-        import pyarrow.parquet
-
-        if options is None:
-            options = {}
-
-        self._metadata_file = pyarrow.parquet.ParquetFile(metadata_filename, **options)
-
-        if row_groups is None:
-            row_groups = range(self._metadata_file.num_row_groups)
-
-        schema = self._metadata_file.schema_arrow
-        if columns is None:
-            columns = schema.names
-        schema = _partial_schema_from_columns(schema, columns)
-
-        if include_partition_columns:
-            paths_and_counts = self._get_paths_and_counts(
-                self._metadata_file, row_groups
-            )
-            partition_columns = _parquet_partitions_to_awkward(paths_and_counts)
-        else:
-            partition_columns = []
-
-        self._use_threads = use_threads
-        self._lookup = self._build_row_group_lookup(directory, self._metadata_file)
-        self._options = options
-
-        super(_ParquetDataset, self).__init__(
-            schema, row_groups, columns, partition_columns
-        )
-
-    @staticmethod
-    def _build_row_group_lookup(directory, metadata_file):
-        last_filename = None
-        lookup = []
-        for i in range(metadata_file.num_row_groups):
-            filename = metadata_file.metadata.row_group(i).column(0).file_path
-            if last_filename is None:
-                if filename == "":
-                    raise ValueError(
-                        "Parquet _metadata file does not contain file paths "
-                        "(e.g. was not made with 'set_file_path')"
-                        + ak._util.exception_suffix(__file__)
-                    )
-                last_filename = filename
-                start_i = 0
-            elif filename != "" and last_filename != filename:
-                last_filename = filename
-                start_i = i
-            lookup.append((os.path.join(directory, last_filename), i - start_i))
-        return lookup
-
-    @staticmethod
-    def _get_paths_and_counts(file, row_groups):
-        paths_and_counts = []
-        last_filename = None
-        for i in row_groups:
-            filename = file.metadata.row_group(i).column(0).file_path
-            if last_filename is None:
-                if filename == "":
-                    raise ValueError(
-                        "Parquet _metadata file does not contain file paths "
-                        "(e.g. was not made with 'set_file_path')"
-                        + ak._util.exception_suffix(__file__)
-                    )
-                last_filename = filename
-                paths_and_counts.append([filename, 0])
-            elif filename != "" and last_filename != filename:
-                last_filename = filename
-                paths_and_counts.append([filename, 0])
-            paths_and_counts[-1][-1] += file.metadata.row_group(i).num_rows
-        return paths_and_counts
-
-    @property
-    def row_group_metadata(self):
-        return [self._metadata_file.metadata.row_group(i) for i in self.row_groups]
-
-    def read_row_group(self, row_group, columns=None):
-        if columns is None:
-            columns = self.columns
-
-        import pyarrow.parquet
-
-        file_path, local_row_group = self._lookup[row_group]
-        local_file = pyarrow.parquet.ParquetFile(file_path, **self._options)
-
-        return local_file.read_row_group(
-            local_row_group, columns, use_threads=self._use_threads
-        )
-
-
-class _ParquetMultiFileDataset(_Dataset):
-    def __init__(
-        self,
-        source,
-        relative_to,
-        row_groups=None,
-        columns=None,
-        use_threads=True,
-        include_partition_columns=True,
-        options=None,
-    ):
-        schema, lookup, paths_and_counts = self._get_dataset_metadata(
-            source, relative_to, options
-        )
-        if row_groups is None:
-            row_groups = range(len(lookup))
-
-        if include_partition_columns:
-            partition_columns = _parquet_partitions_to_awkward(paths_and_counts)
-        else:
-            partition_columns = []
-
-        if columns is None:
-            columns = schema.names
-        schema = _partial_schema_from_columns(schema, columns)
-
-        self._lookup = lookup
-        self._use_threads = use_threads
-        super(_ParquetMultiFileDataset, self).__init__(
-            schema, row_groups, columns, partition_columns
-        )
-
-    @staticmethod
-    def _get_dataset_metadata(source, relative_to, options):
-        import pyarrow.parquet
-
-        schema = None
-        lookup = []
-        paths_and_counts = []
-        for filename in source:
-            single_file = pyarrow.parquet.ParquetFile(filename, **options)
-            if schema is None:
-                schema = single_file.schema_arrow
-                first_filename = filename
-            elif schema != single_file.schema_arrow:
-                raise ValueError(
-                    "schema in {0} differs from the first schema (in {1})".format(
-                        repr(filename), repr(first_filename)
-                    )
-                    + ak._util.exception_suffix(__file__)
-                )
-            for i in range(single_file.num_row_groups):
-                lookup.append((single_file, i))
-            paths_and_counts.append(
-                (os.path.relpath(filename, relative_to), single_file.metadata.num_rows)
-            )
-        return schema, lookup, paths_and_counts
-
-    @property
-    def row_group_metadata(self):
-        return [
-            f.metadata.row_group(g)
-            for f, g in (self._lookup[g] for g in self.row_groups)
-        ]
-
-    def read_row_group(self, row_group, columns=None):
-        if columns is None:
-            columns = self.columns
-
-        single_file, local_row_group = self._lookup[row_group]
-
-        return single_file.read_row_group(
-            local_row_group, columns, use_threads=self._use_threads
         )
 
 
@@ -3812,6 +3710,17 @@ def _regularize_parquet_lazy_cache_key(lazy_cache_key):
     return lazy_cache_key
 
 
+def _path_to_posix(path):
+    return path.replace(os.path.sep, posixpath.sep)
+
+
+def _dataset_paths_from_metadata(metadata_dataset):
+    base_path = posixpath.dirname(metadata_dataset.files[0])
+    fragment = next(metadata_dataset.get_fragments())
+    relative_paths = [g.metadata.column(0).file_path for g in fragment.row_groups]
+    return [posixpath.join(base_path, p) for p in relative_paths]
+
+
 def from_parquet(
     source,
     columns=None,
@@ -3863,59 +3772,74 @@ def from_parquet(
     See also #ak.to_parquet.
     """
     _import_pyarrow("ak.from_parquet")
+    from pyarrow.fs import FileType, LocalFileSystem, FileSelector
 
     if isinstance(row_groups, (numbers.Integral, np.integer)):
         row_groups = [row_groups]
 
     source = _regularize_path(source)
 
-    if isinstance(source, str) and os.path.isdir(source):
-        metadata_filename = os.path.join(source, "_metadata")
-        if os.path.exists(metadata_filename):
-            dataset = _ParquetDataset(
-                source,
-                metadata_filename,
-                row_groups,
-                columns,
-                use_threads,
-                include_partition_columns,
-                options,
-            )
-        else:
-            relative_to = source
-            source = [
-                _regularize_path(x)
-                for x in sorted(glob.glob(source + "/**/*.parquet", recursive=True))
-            ]
-            dataset = _ParquetMultiFileDataset(
-                source,
-                relative_to,
-                row_groups,
-                columns,
-                use_threads,
-                include_partition_columns,
-                options,
-            )
-
-    elif (
-        not isinstance(source, str)
-        and isinstance(source, Iterable)
-        and not hasattr(source, "read")
-    ):
-        source = [_regularize_path(x) for x in source]
-        relative_to = os.path.commonpath(source)
-        dataset = _ParquetMultiFileDataset(
-            source,
-            relative_to,
-            row_groups,
-            columns,
-            use_threads,
-            include_partition_columns,
-            options,
-        )
+    if hasattr(source, "read"):
+        dataset = _ParquetFileDataset(source, row_groups, columns, use_threads, options)
 
     else:
-        dataset = _ParquetFileDataset(source, row_groups, columns, use_threads, options)
+        # Update options and get FS
+        filesystem = options.setdefault("filesystem", LocalFileSystem())
+        partitioning = options.setdefault("partitioning", "hive")
+        if partitioning != "hive":
+            raise ValueError(
+                "Cannot set partitioning to value other than hive: "
+                + repr(partitioning)
+                + ak._util.exception_suffix(__file__)
+            )
+
+        if isinstance(source, str):
+            source_as_posix = _path_to_posix(source)
+            source_info = filesystem.get_file_info(source_as_posix)
+            if source_info.type == FileType.Directory:
+                metadata_path = posixpath.join(source_as_posix, "_metadata")
+                metadata_info = filesystem.get_file_info(metadata_path)
+
+                # Directory with _metadata
+                if metadata_info.type == FileType.File:
+                    metadata_dataset = pyarrow.dataset.dataset(metadata_path, **options)
+                    paths = _dataset_paths_from_metadata(metadata_dataset)
+                    arrow_dataset = pyarrow.dataset.dataset(
+                        paths,
+                        partition_base_dir=source_as_posix,
+                        schema=metadata_dataset.schema,
+                        **options
+                    )
+                # Directory of files (recurse)
+                else:
+                    infos = filesystem.get_file_info(
+                        FileSelector(source_as_posix, recursive=True)
+                    )
+                    paths = sorted([i.path for i in infos if i.extension == ".parquet"])
+                    arrow_dataset = pyarrow.dataset.dataset(
+                        paths, partition_base_dir=source_as_posix, **options
+                    )
+            # Single path
+            else:
+                arrow_dataset = pyarrow.dataset.dataset(source_as_posix, **options)
+        # Iterable of paths
+        elif isinstance(source, Iterable):
+            source = [_regularize_path(x) for x in source]
+            if isinstance(source[0], str):
+                source = [_path_to_posix(p) for p in source]
+                options.setdefault("partition_base_dir", posixpath.commonpath(source))
+            arrow_dataset = pyarrow.dataset.dataset(source, **options)
+        else:
+            raise TypeError(
+                "source must be a str, file-like object, or iterable of supported types"
+                " (see pyarrow.dataset.dataset documentation for more details): "
+                + repr(source)
+                + ak._util.exception_suffix(__file__)
+            )
+
+        dataset = _ArrowDataset(
+            arrow_dataset, row_groups, columns, use_threads, include_partition_columns
+        )
 
     if dataset.is_empty:
         return ak.layout.RecordArray(
