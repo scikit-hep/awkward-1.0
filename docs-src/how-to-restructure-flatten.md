@@ -31,7 +31,9 @@ To destructure an array for plotting, you'll want to
    * remove record structures,
    * remove missing data
 
-There is a function that does all of these things in one call, [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) with `axis=None`, but you don't want to apply that without thinking because structure is important to the meaning of your data and you want to be able to interpret the plot. Destructuring is an information-losing operation, so your guidance is required to eliminate exactly the structure you want to eliminate, and there are several ways to do that, depending on what you want to do.
+There is a function that does all of these things in one call, [ak.ravel](https://awkward-array.readthedocs.io/en/latest/_auto/ak.ravel.html), but you don't want to apply that without thinking because structure is important to the meaning of your data and you want to be able to interpret the plot. Destructuring is an information-losing operation, so your guidance is required to eliminate exactly the structure you want to eliminate, and there are several ways to do that, depending on what you want to do.
+
+When more precision is required, such as removing only the nested lists and missing data at a specific level of nesting, an alternative function, [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html), is more appropriate. Unlike `ak.ravel`, `ak.flatten` accepts an `axis` parameter which restricts the operation to a particular level of nesting, and preserves the record structure.
 
 After destructuring, you might _still_ need to call `np.asarray` on the output because the plotting library might not recognize an [ak.Array](https://awkward-array.readthedocs.io/en/latest/_auto/ak.Array.html) as an array. You'll probably also want to develop your destructuring on a commandline or a different Jupyter cell from the plotting library function call, to understand what structure the output has without the added complication of the plotting library's error messages.
 
@@ -40,10 +42,10 @@ import awkward as ak
 import numpy as np
 ```
 
-ak.flatten with axis=None
--------------------------
+ak.ravel vs ak.flatten(axis="records")
+--------------------------------------
 
-As mentioned above, [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) with `axis=None` is the sledgehammer that turns any array into a 1-dimensional array with no nested lists, no nested records, and no missing data.
+As mentioned above, [ak.ravel](https://awkward-array.readthedocs.io/en/latest/_auto/ak.ravel.html) is the sledgehammer that turns any array into a 1-dimensional array with no nested lists, no nested records, and no missing data. 
 
 ```{code-cell} ipython3
 array = ak.Array([[{"x": 1.1, "y": [1]}, {"x": None, "y": [1, 2]}], [], [{"x": 3.3, "y": [1, 2, 3]}]])
@@ -55,13 +57,13 @@ array.type
 ```
 
 ```{code-cell} ipython3
-ak.flatten(array, axis=None)
+ak.ravel(array)
 ```
 
 Calling this function on an already flat array does nothing, so you don't have to worry about what state your array had been in before you called it.
 
 ```{code-cell} ipython3
-ak.flatten(ak.flatten(array, axis=None), axis=None)
+ak.ravel(ak.ravel(array))
 ```
 
 However, there are a few questions you should be asking yourself:
@@ -92,20 +94,20 @@ array.x
 array["x"]
 ```
 
-This controls the biggest deficiency of [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) with `axis=None`, the mixing of data with different meanings.
+This controls the biggest deficiency of [ak.ravel](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html), the mixing of data with different meanings.
 
 ```{code-cell} ipython3
-ak.flatten(array.x, axis=None)
+ak.ravel(array.x)
 ```
 
 ```{code-cell} ipython3
-ak.flatten(array.y, axis=None)
+ak.ravel(array.y)
 ```
 
 If some of your fields can be safely flattened—together into one set—and others can't, you can use a list of strings to pick just the fields you want.
 
 ```{code-cell} ipython3
-ak.flatten(array[["x", "y"]], axis=None)
+ak.ravel(array[["x", "y"]])
 ```
 
 (Careful! A tuple has a special meaning in slices, which doesn't apply here.)
@@ -129,13 +131,67 @@ array
 ```
 
 ```{code-cell} ipython3
-ak.flatten(array[["x", "y"], "up"], axis=None)
+ak.ravel(array[["x", "y"], "up"])
 ```
+
+
+ak.flatten(axis="records")
+--------------------------
+
+[ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) also provides a means of completely flattening an array with `axis="records". Unlike [ak.ravel](https://awkward-array.readthedocs.io/en/latest/_auto/ak.ravel.html), it preserves the record structure.
+
+```{code-cell} ipython3
+ak.flatten(array, axis="records")
+```
+
+This is often useful when several fields need to be flattened simultaneously. 
+
+```{code-cell} ipython3
+array = ak.Array([
+    [{"x": 1, "y": 3.3}, {"x": 2, "y": 1.1}, {"x": 3, "y": 2.2}],
+    [],
+    [{"x": 4, "y": 5.5}, {"x": 5, "y": 4.4}],
+    [{"x": 5, "y": 1.1}, {"x": 4, "y": 3.3}, {"x": 2, "y": 5.5}, {"x": 1, "y": 4.4}],
+])
+array
+```
+
+```{code-cell} ipython3
+flattened = ak.flatten(array, axis="records")
+flattened
+```
+
+```{code-cell} ipython3
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+ax.scatter(flattened.x, flattened.y);
+```
+
+When there are records-within-records, the flattened array keeps the record structure
+
+```{code-cell} ipython3
+array = ak.Array([
+    {"x": {"up": 1, "down": -1}, "y": {"up": 1.1, "down": -1.1}},
+    {"x": {"up": 2, "down": -2}, "y": {"up": 2.2, "down": -2.2}},
+    {"x": {"up": 3, "down": -3}, "y": {"up": 3.3, "down": -3.3}},
+    {"x": {"up": 4, "down": -4}, "y": {"up": 4.4, "down": -4.4}},
+])
+array
+```
+
+```{code-cell} ipython3
+ak.flatten(array, axis="records")
+```
+
+There is considerable overlap between `ak.ravel`, and `ak.flatten(axis="records")`. In most cases, `ak.flatten` is the most appropriate function, because the fields of an array are often conceptually distinct and should therefore not be intermixed (e.g. the components of a position vector). Only when you need a NumPy-convertible, structureless array is `ak.ravel` the right choice.
+
++++
 
 ak.flatten for one axis
 -----------------------
 
-Since `axis=None` is so dangerous, the default value of [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) is `axis=1`. This flattens only the first nested dimension.
+The default axis of [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html) is `axis=1`. This flattens only the first nested dimension.
 
 ```{code-cell} ipython3
 ak.flatten(ak.Array([[0, 1, 2], [], [3, 4], [5], [6, 7, 8, 9]]))
@@ -395,7 +451,7 @@ array[maximize_by].tolist()
 This still has list structures and missing values, so it's ready for [ak.flatten](https://awkward-array.readthedocs.io/en/latest/_auto/ak.flatten.html), assuming that we extract the appropriate record field to plot.
 
 ```{code-cell} ipython3
-ak.flatten(array[maximize_by].z, axis=None)
+ak.flatten(array[maximize_by].z, axis="records")
 ```
 
 Concatenating independently restructured arrays
@@ -415,7 +471,7 @@ ak.flatten(array.x)
 ```
 
 ```{code-cell} ipython3
-ak.flatten(ak.max(array.y, axis=2), axis=None)
+ak.flatten(ak.max(array.y, axis=2), axis="records")
 ```
 
 To get all of these into one array (because the plotting function only accepts one argument), you'll need to [ak.concatenate](https://awkward-array.readthedocs.io/en/latest/_auto/ak.concatenate.html) them.
@@ -423,7 +479,7 @@ To get all of these into one array (because the plotting function only accepts o
 ```{code-cell} ipython3
 ak.concatenate([
     ak.flatten(array.x),
-    ak.flatten(ak.max(array.y, axis=2), axis=None),
+    ak.flatten(ak.max(array.y, axis=2), axis="records"),
 ])
 ```
 
