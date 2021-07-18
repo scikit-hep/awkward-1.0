@@ -6,6 +6,7 @@
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/array/NumpyArray.h"
+#include "awkward/refactoring.h"
 
 namespace ak = awkward;
 
@@ -40,7 +41,9 @@ int main(int, char**) {
 
   ak::ArrayBuilder builder(ak::ArrayBuilderOptions(1024, 2.0));
   for (auto x : vector) fill(builder, x);
-  std::shared_ptr<ak::Content> array = builder.snapshot();
+
+  // FIXME: refactor
+  std::shared_ptr<ak::Content> array = ::builder_snapshot(builder.builder());
 
   // array[-1][0][1] == 7.7
   std::shared_ptr<ak::NumpyArray> scalar = std::dynamic_pointer_cast<ak::NumpyArray>(array.get()->getitem_at(-1).get()->getitem_at(0).get()->getitem_at(1));

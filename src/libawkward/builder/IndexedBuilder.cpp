@@ -4,10 +4,6 @@
 
 #include <stdexcept>
 
-#include "awkward/Identities.h"
-#include "awkward/Index.h"
-#include "awkward/array/IndexedArray.h"
-#include "awkward/type/OptionType.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/UnionBuilder.h"
 
@@ -245,21 +241,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedGenericBuilder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    if (hasnull_) {
-      return std::make_shared<IndexedOptionArray64>(
-        Identities::none(),
-        util::Parameters(),
-        index,
-        array_);
-    }
-    else {
-      return std::make_shared<IndexedArray64>(
-        Identities::none(),
-        util::Parameters(),
-        index,
-        array_);
-    }
+    throw std::invalid_argument(
+      std::string("called obsolete 'Float64Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr
@@ -293,21 +277,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedI32Builder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    if (hasnull_) {
-      return std::make_shared<IndexedOptionArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
-    else {
-      return std::make_shared<IndexedArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
+    throw std::invalid_argument(
+      std::string("called obsolete 'IndexedI32Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr
@@ -341,21 +313,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedIU32Builder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    if (hasnull_) {
-      return std::make_shared<IndexedOptionArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
-    else {
-      return std::make_shared<IndexedArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
+    throw std::invalid_argument(
+      std::string("called obsolete 'IndexedIU32Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr
@@ -389,21 +349,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedI64Builder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    if (hasnull_) {
-      return std::make_shared<IndexedOptionArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
-    else {
-      return std::make_shared<IndexedArray64>(
-        Identities::none(),
-        array_.get()->content().get()->parameters(),
-        index,
-        array_.get()->content());
-    }
+    throw std::invalid_argument(
+      std::string("called obsolete 'IndexedI64Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr
@@ -440,12 +388,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedIO32Builder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    return std::make_shared<IndexedOptionArray64>(
-      Identities::none(),
-      array_.get()->content().get()->parameters(),
-      index,
-      array_.get()->content());
+    throw std::invalid_argument(
+      std::string("called obsolete 'IndexedIO32Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr
@@ -481,12 +426,9 @@ namespace awkward {
 
   const ContentPtr
   IndexedIO64Builder::snapshot() const {
-    Index64 index(index_.ptr(), 0, index_.length(), kernel::lib::cpu);
-    return std::make_shared<IndexedOptionArray64>(
-      Identities::none(),
-      array_.get()->content().get()->parameters(),
-      index,
-      array_.get()->content());
+    throw std::invalid_argument(
+      std::string("called obsolete 'IndexedIO64Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   const BuilderPtr

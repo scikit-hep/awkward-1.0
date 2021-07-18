@@ -9,6 +9,7 @@
 
 #include "awkward/common.h"
 #include "awkward/util.h"
+#include "awkward/builder/Builder.h"
 
 namespace awkward {
   class Content;
@@ -279,6 +280,10 @@ namespace awkward {
     /// @brief Ends a record.
     void
       endrecord();
+
+    // FIXME: refactor
+    // @brief Root node of the Builder tree.
+    const Builder& builder() const { return *builder_; }
 
     /// @brief Append an element `at` a given index of an arbitrary `array`
     /// (Content instance) to the accumulated data, handling

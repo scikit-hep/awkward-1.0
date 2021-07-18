@@ -4,11 +4,6 @@
 
 #include <stdexcept>
 
-#include "awkward/Identities.h"
-#include "awkward/Index.h"
-#include "awkward/array/EmptyArray.h"
-#include "awkward/array/IndexedArray.h"
-#include "awkward/type/UnknownType.h"
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/BoolBuilder.h"
@@ -52,24 +47,9 @@ namespace awkward {
 
   const ContentPtr
   UnknownBuilder::snapshot() const {
-    if (nullcount_ == 0) {
-      return std::make_shared<EmptyArray>(Identities::none(),
-                                          util::Parameters());
-    }
-    else {
-      // This is the only snapshot that is O(N), rather than O(1),
-      // but it is a corner case (array of only Nones).
-      Index64 index(nullcount_);
-      int64_t* rawptr = index.ptr().get();
-      for (int64_t i = 0;  i < nullcount_;  i++) {
-        rawptr[i] = -1;
-      }
-      return std::make_shared<IndexedOptionArray64>(
-        Identities::none(),
-        util::Parameters(),
-        index,
-        std::make_shared<EmptyArray>(Identities::none(), util::Parameters()));
-    }
+    throw std::invalid_argument(
+      std::string("called obsolete 'UnknownBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

@@ -286,6 +286,10 @@ namespace awkward {
     void
       resume() const;
 
+    // FIXME: refactor
+    // @brief Root node of the FormBuilder tree.
+    const FormBuilder& builder() const { return *builder_; }
+
   protected:
     /// @brief A unique ID to use when Form nodes do not have Form key
     /// defined.
@@ -313,7 +317,7 @@ namespace awkward {
     int64_t length_;
 
     /// @brief Root node of the FormBuilder tree.
-    std::shared_ptr<FormBuilder> builder_;
+    FormBuilderPtr builder_;
 
     /// @brief Virtual machine.
     std::shared_ptr<ForthMachine32> vm_;

@@ -2,9 +2,8 @@
 
 #define FILENAME(line) FILENAME_FOR_EXCEPTIONS("src/libawkward/builder/Float64Builder.cpp", line)
 
-#include "awkward/Identities.h"
-#include "awkward/array/NumpyArray.h"
-#include "awkward/type/PrimitiveType.h"
+#include <stdexcept>
+
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/Complex128Builder.h"
 #include "awkward/builder/OptionBuilder.h"
@@ -60,18 +59,9 @@ namespace awkward {
 
   const ContentPtr
   Float64Builder::snapshot() const {
-    std::vector<ssize_t> shape = { (ssize_t)buffer_.length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(double) };
-    return std::make_shared<NumpyArray>(Identities::none(),
-                                        util::Parameters(),
-                                        buffer_.ptr(),
-                                        shape,
-                                        strides,
-                                        0,
-                                        sizeof(double),
-                                        "d",
-                                        util::dtype::float64,
-                                        kernel::lib::cpu);
+    throw std::invalid_argument(
+      std::string("called obsolete 'Float64Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

@@ -15,6 +15,7 @@
 
 #include "awkward/builder/ArrayBuilder.h"
 #include "awkward/Content.h"
+#include "awkward/refactoring.h"
 
 #include "awkward/io/json.h"
 
@@ -757,8 +758,9 @@ namespace awkward {
       return true;
     }
 
+    // FIXME: refactor
     const ContentPtr snapshot() const {
-      return builder_.snapshot();
+      return ::builder_snapshot(builder_.builder());
     }
 
   private:

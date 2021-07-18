@@ -2,9 +2,8 @@
 
 #define FILENAME(line) FILENAME_FOR_EXCEPTIONS("src/libawkward/builder/Complex128Builder.cpp", line)
 
-#include "awkward/Identities.h"
-#include "awkward/array/NumpyArray.h"
-#include "awkward/type/PrimitiveType.h"
+#include <stdexcept>
+
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/UnionBuilder.h"
 
@@ -67,18 +66,9 @@ namespace awkward {
 
   const ContentPtr
   Complex128Builder::snapshot() const {
-    std::vector<ssize_t> shape = { (ssize_t)buffer_.length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(std::complex<double>) };
-    return std::make_shared<NumpyArray>(Identities::none(),
-                                        util::Parameters(),
-                                        buffer_.ptr(),
-                                        shape,
-                                        strides,
-                                        0,
-                                        sizeof(std::complex<double>),
-                                        "Zd",
-                                        util::dtype::complex128,
-                                        kernel::lib::cpu);
+    throw std::invalid_argument(
+      std::string("called obsolete 'Complex128Builder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool

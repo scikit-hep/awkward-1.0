@@ -3,6 +3,7 @@
 #define FILENAME(line) FILENAME_FOR_EXCEPTIONS("src/libawkward/builder/ArrayBuilder.cpp", line)
 
 #include <sstream>
+#include <stdexcept>
 
 #include "awkward/common.h"
 #include "awkward/Content.h"
@@ -12,6 +13,8 @@
 #include "awkward/builder/UnknownBuilder.h"
 
 #include "awkward/builder/ArrayBuilder.h"
+
+#include "awkward/refactoring.h"
 
 namespace awkward {
   ArrayBuilder::ArrayBuilder(const ArrayBuilderOptions& options)
@@ -45,32 +48,43 @@ namespace awkward {
 
   const ContentPtr
   ArrayBuilder::snapshot() const {
-    return builder_.get()->snapshot();
+    // FIXME: refactor
+    return ::builder_snapshot(builder());
   }
 
   const ContentPtr
   ArrayBuilder::getitem_at(int64_t at) const {
-    return snapshot().get()->getitem_at(at);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ArrayBuilder::getitem_at'")
+      + FILENAME(__LINE__));
   }
 
   const ContentPtr
   ArrayBuilder::getitem_range(int64_t start, int64_t stop) const {
-    return snapshot().get()->getitem_range(start, stop);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ArrayBuilder::getitem_range'")
+      + FILENAME(__LINE__));
   }
 
   const ContentPtr
   ArrayBuilder::getitem_field(const std::string& key) const {
-    return snapshot().get()->getitem_field(key);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ArrayBuilder::getitem_field'")
+      + FILENAME(__LINE__));
   }
 
   const ContentPtr
   ArrayBuilder::getitem_fields(const std::vector<std::string>& keys) const {
-    return snapshot().get()->getitem_fields(keys);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ArrayBuilder::getitem_fields'")
+      + FILENAME(__LINE__));
   }
 
   const ContentPtr
   ArrayBuilder::getitem(const Slice& where) const {
-    return snapshot().get()->getitem(where);
+    throw std::invalid_argument(
+      std::string("called obsolete 'ArrayBuilder::getitem'")
+      + FILENAME(__LINE__));
   }
 
   void

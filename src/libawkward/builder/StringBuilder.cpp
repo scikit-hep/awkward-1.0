@@ -2,11 +2,8 @@
 
 #define FILENAME(line) FILENAME_FOR_EXCEPTIONS("src/libawkward/builder/StringBuilder.cpp", line)
 
-#include "awkward/Identities.h"
-#include "awkward/array/NumpyArray.h"
-#include "awkward/array/ListOffsetArray.h"
-#include "awkward/type/PrimitiveType.h"
-#include "awkward/type/ListType.h"
+#include <stdexcept>
+
 #include "awkward/builder/ArrayBuilderOptions.h"
 #include "awkward/builder/OptionBuilder.h"
 #include "awkward/builder/UnionBuilder.h"
@@ -59,41 +56,9 @@ namespace awkward {
 
   const ContentPtr
   StringBuilder::snapshot() const {
-    util::Parameters char_parameters;
-    util::Parameters string_parameters;
-
-    if (encoding_ == nullptr) {
-      char_parameters["__array__"] = std::string("\"byte\"");
-      string_parameters["__array__"] = std::string("\"bytestring\"");
-    }
-    else if (std::string(encoding_) == std::string("utf-8")) {
-      char_parameters["__array__"] = std::string("\"char\"");
-      string_parameters["__array__"] = std::string("\"string\"");
-    }
-    else {
-      throw std::invalid_argument(
-        std::string("unsupported encoding: ") + util::quote(encoding_)
-        + FILENAME(__LINE__));
-    }
-
-    Index64 offsets(offsets_.ptr(), 0, offsets_.length(), kernel::lib::cpu);
-    std::vector<ssize_t> shape = { (ssize_t)content_.length() };
-    std::vector<ssize_t> strides = { (ssize_t)sizeof(uint8_t) };
-    ContentPtr content;
-    content = std::make_shared<NumpyArray>(Identities::none(),
-                                           char_parameters,
-                                           content_.ptr(),
-                                           shape,
-                                           strides,
-                                           0,
-                                           sizeof(uint8_t),
-                                           "B",
-                                           util::dtype::uint8,
-                                           kernel::lib::cpu);
-    return std::make_shared<ListOffsetArray64>(Identities::none(),
-                                               string_parameters,
-                                               offsets,
-                                               content);
+    throw std::invalid_argument(
+      std::string("called obsolete 'StringBuilder::snapshot'")
+      + FILENAME(__LINE__));
   }
 
   bool
