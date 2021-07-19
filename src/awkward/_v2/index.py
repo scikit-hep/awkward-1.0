@@ -4,7 +4,7 @@ from __future__ import absolute_import
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 _dtype_to_form = {
     np.dtype(np.int8): "i8",

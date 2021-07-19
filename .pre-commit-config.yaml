@@ -43,3 +43,17 @@ repos:
   hooks:
   - id: check-manifest
     stages: [manual]
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.1.0
+  hooks:
+  - id: codespell
+    args: ["-L", "ue,subjet,parms,fo,numer,thre"]
+
+- repo: local
+  hooks:
+  - id: disallow-caps
+    name: Disallow improper capitalization
+    language: pygrep
+    entry: PyBind|Cmake|CCache|Github|PyTest
+    exclude: .pre-commit-config.yaml

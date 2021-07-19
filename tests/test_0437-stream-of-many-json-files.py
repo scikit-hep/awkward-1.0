@@ -370,7 +370,7 @@ def test_fromfile():
         {"x": 6.6, "y": [1, 2, 3, 4, 5]},
     ]
 
-    # read json file containg 'nan' and 'inf' user-defined strings
+    # read json file containing 'nan' and 'inf' user-defined strings
     # and replace 'nan' and 'inf' strings with floats
     array = ak.from_json(
         os.path.join(DIR, "samples/test.json"),
@@ -434,7 +434,7 @@ def test_fromfile():
         ],
     ]
 
-    # read json file containg 'nan' and 'inf' user-defined strings
+    # read json file containing 'nan' and 'inf' user-defined strings
     array = ak.from_json(os.path.join(DIR, "samples/test.json"))
 
     assert ak.to_list(array) == [
@@ -493,7 +493,7 @@ def test_fromfile():
         ],
     ]
 
-    # read json file containg 'nan' and 'inf' user-defined strings
+    # read json file containing 'nan' and 'inf' user-defined strings
     # and replace 'nan' and 'inf' strings with a predefined 'None' string
     array = ak.from_json(
         os.path.join(DIR, "samples/test.json"),

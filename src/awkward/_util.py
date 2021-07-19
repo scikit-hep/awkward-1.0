@@ -18,7 +18,7 @@ except ImportError:
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 py27 = sys.version_info[0] < 3
 py35 = sys.version_info[0] == 3 and sys.version_info[1] <= 5

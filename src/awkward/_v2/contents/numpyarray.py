@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import awkward as ak
 from awkward._v2.contents.content import Content
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 
 class NumpyArray(Content):

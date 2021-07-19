@@ -15,7 +15,7 @@ namespace awkward {
 
   /// @class ArrayGenerator
   ///
-  /// @brief Abstract superclass to generat arrays for VirtualArray, definining
+  /// @brief Abstract superclass to generate arrays for VirtualArray, defining
   /// the interface.
   ///
   /// The main implementation, PyArrayGenerator, is passed through pybind11 to
@@ -54,7 +54,7 @@ namespace awkward {
       generate() const = 0;
 
     /// @brief Creates an array and checks it against the #form.
-    /// If form was not available intially, no check is made and the form
+    /// If form was not available initially, no check is made and the form
     /// inferred from the result is saved in case it is useful later
     const ContentPtr
       generate_and_check();

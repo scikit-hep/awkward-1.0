@@ -11,7 +11,7 @@ import awkward as ak
 from awkward._v2.contents.content import Content
 from awkward._v2.index import Index
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 
 class UnionArray(Content):

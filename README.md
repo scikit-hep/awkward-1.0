@@ -294,4 +294,4 @@ Thanks especially to the gracious help of Awkward Array contributors (including 
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-💻: code, 📖: documentation, 🚇: infrastructure, 🚧: maintainance, ⚠: tests and feedback, 🤔: foundational ideas.
+💻: code, 📖: documentation, 🚇: infrastructure, 🚧: maintenance, ⚠: tests and feedback, 🤔: foundational ideas.

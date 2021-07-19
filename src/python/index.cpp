@@ -104,7 +104,7 @@ Index_from_cuda_array_interface(const std::string& name,
     }
     else if ((endianness == ">"  &&  little_endian)  ||
              (endianness == "<"  &&  !little_endian)) {
-      throw std::invalid_argument(std::string("Input Array has a different endianess than the System") + FILENAME(__LINE__));
+      throw std::invalid_argument(std::string("Input Array has a different endianness than the System") + FILENAME(__LINE__));
     }
   }
 

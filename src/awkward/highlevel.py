@@ -14,8 +14,8 @@ except ImportError:
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
-numpy = ak.nplike.Numpy.instance()
+np = ak.nplike.NumPyMetadata.instance()
+numpy = ak.nplike.NumPy.instance()
 
 _dir_pattern = re.compile(r"^[a-zA-Z_]\w*$")
 
@@ -2750,7 +2750,7 @@ class ArrayBuilder(Iterable, Sized):
 
             [[1.1, 2.2, 3.3], [], [4.4, 5.5]]
 
-        Since context managers aren't yet suppored by Numba, this method
+        Since context managers aren't yet supported by Numba, this method
         can't be used in Numba.
         """
         return self.List(self)
@@ -2786,7 +2786,7 @@ class ArrayBuilder(Iterable, Sized):
 
             [(1, 1.1, "one"), (2, 2.2, "two")]
 
-        Since context managers aren't yet suppored by Numba, this method
+        Since context managers aren't yet supported by Numba, this method
         can't be used in Numba.
         """
         return self.Tuple(self, numfields)
@@ -2820,7 +2820,7 @@ class ArrayBuilder(Iterable, Sized):
 
             [{"x": 1.0, "y": 1.1}, {"x": 2.0, "y": 2.2}]
 
-        Since context managers aren't yet suppored by Numba, this method
+        Since context managers aren't yet supported by Numba, this method
         can't be used in Numba.
         """
         return self.Record(self, name)

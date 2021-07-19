@@ -234,7 +234,7 @@ def test_IndexedOptionArray():
         [5.5, 5.5, 3.3],
     ]
 
-    # FIXME: Based on Numpy list sorting:
+    # FIXME: Based on NumPy list sorting:
     #
     # array([list([2.2, 1.1, 3.3]), list([]), list([4.4, 5.5]), list([5.5]),
     #        list([-4.4, -5.5, -6.6])], dtype=object)

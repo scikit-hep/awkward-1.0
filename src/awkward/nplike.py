@@ -39,9 +39,9 @@ to obtain an unmixed array in main memory or the GPU(s)."""
                 )
 
     if libs == set() or libs == set(["cpu"]):
-        return Numpy.instance()
+        return NumPy.instance()
     elif libs == set(["cuda"]):
-        return Cupy.instance()
+        return CuPy.instance()
     else:
         raise ValueError(
             """attempting to use both a 'cpu' array and a 'cuda' array in the """
@@ -65,7 +65,7 @@ class Singleton(object):
         return cls._instance
 
 
-class NumpyMetadata(Singleton):
+class NumPyMetadata(Singleton):
     bool_ = numpy.bool_
     int8 = numpy.int8
     int16 = numpy.int16
@@ -106,22 +106,22 @@ class NumpyMetadata(Singleton):
 
 
 if hasattr(numpy, "float16"):
-    NumpyMetadata.float16 = numpy.float16
+    NumPyMetadata.float16 = numpy.float16
 
 if hasattr(numpy, "float128"):
-    NumpyMetadata.float128 = numpy.float128
+    NumPyMetadata.float128 = numpy.float128
 
 if hasattr(numpy, "complex256"):
-    NumpyMetadata.complex256 = numpy.complex256
+    NumPyMetadata.complex256 = numpy.complex256
 
 if hasattr(numpy, "datetime64"):
-    NumpyMetadata.datetime64 = numpy.datetime64
+    NumPyMetadata.datetime64 = numpy.datetime64
 
 if hasattr(numpy, "timedelta64"):
-    NumpyMetadata.timedelta64 = numpy.timedelta64
+    NumPyMetadata.timedelta64 = numpy.timedelta64
 
 
-class NumpyLike(Singleton):
+class NumPyLike(Singleton):
     ############################ array creation
 
     def array(self, *args, **kwargs):
@@ -343,7 +343,7 @@ class NumpyLike(Singleton):
         return self._module.datetime_as_string(*args, **kwargs)
 
 
-class NumpyKernel(object):
+class NumPyKernel(object):
     def __init__(self, kernel):
         self._kernel = kernel
 
@@ -357,12 +357,12 @@ class NumpyKernel(object):
         )
 
 
-class Numpy(NumpyLike):
+class NumPy(NumPyLike):
     def to_rectilinear(self, array, *args, **kwargs):
         return ak.operations.convert.to_numpy(array, *args, **kwargs)
 
     def __getitem__(self, args):
-        return NumpyKernel(ak._cpu_kernels.kernel[args])
+        return NumPyKernel(ak._cpu_kernels.kernel[args])
 
     def __init__(self):
         self._module = numpy
@@ -380,7 +380,7 @@ class Numpy(NumpyLike):
         return self._module.ndarray
 
 
-class Cupy(NumpyLike):
+class CuPy(NumPyLike):
     def to_rectilinear(self, array, *args, **kwargs):
         return ak.operations.convert.to_cupy(array, *args, **kwargs)
 

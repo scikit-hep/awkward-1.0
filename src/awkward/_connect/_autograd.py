@@ -6,7 +6,7 @@ import types
 
 import awkward as ak
 
-numpy = ak.nplike.Numpy.instance()
+numpy = ak.nplike.NumPy.instance()
 
 NEP13Box = None
 

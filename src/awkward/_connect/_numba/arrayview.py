@@ -10,7 +10,7 @@ import numba.core.typing.ctypes_utils
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 ########## for code that's built up from strings
 

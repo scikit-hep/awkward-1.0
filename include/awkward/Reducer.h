@@ -844,7 +844,7 @@ namespace awkward {
 
   /// @class ReducerMin
   ///
-  /// @brief Reducer algorithm that returns the minimumm value. The identity
+  /// @brief Reducer algorithm that returns the minimum value. The identity
   /// is infinity or the largest possible value.
   ///
   /// Reducers have no parameters or state. They are classes for convenience,
@@ -856,7 +856,7 @@ namespace awkward {
   /// or maximization.
   ///
   /// For the complex numbers array it
-  /// returns the minimumm absolute value (also known as norm, modulus,
+  /// returns the minimum absolute value (also known as norm, modulus,
   /// or magnitude) of a complex number.
   class LIBAWKWARD_EXPORT_SYMBOL ReducerMin: public Reducer {
   public:
@@ -968,7 +968,7 @@ namespace awkward {
   /// or maximization.
   ///
   /// For the complex numbers array it
-  /// returns the minimumm absolute value (also known as norm, modulus,
+  /// returns the minimum absolute value (also known as norm, modulus,
   /// or magnitude) of a complex number.
   class LIBAWKWARD_EXPORT_SYMBOL ReducerMax: public Reducer {
   public:
@@ -1076,7 +1076,7 @@ namespace awkward {
   /// which values to combine, from the choice of reducer algorithm.
   ///
   /// For the complex numbers array it
-  /// returns the position of the minimumm absolute value (also known as norm,
+  /// returns the position of the minimum absolute value (also known as norm,
   /// modulus, or magnitude) of a complex number.
   class LIBAWKWARD_EXPORT_SYMBOL ReducerArgmin: public Reducer {
   public:

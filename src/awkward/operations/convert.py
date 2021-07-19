@@ -21,8 +21,8 @@ except ImportError:
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
-numpy = ak.nplike.Numpy.instance()
+np = ak.nplike.NumPyMetadata.instance()
+numpy = ak.nplike.NumPy.instance()
 
 
 def _regularize_path(path):
@@ -433,8 +433,8 @@ def to_cupy(array):
 
     See also #ak.from_cupy and #ak.to_numpy.
     """
-    cupy = ak.nplike.Cupy.instance()
-    np = ak.nplike.NumpyMetadata.instance()
+    cupy = ak.nplike.CuPy.instance()
+    np = ak.nplike.NumPyMetadata.instance()
 
     if isinstance(array, (bool, numbers.Number)):
         return cupy.array([array])[0]

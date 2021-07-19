@@ -77,7 +77,7 @@ namespace awkward {
     TypePtr out;
     if (dtype_ == util::dtype::NOT_PRIMITIVE) {
       throw std::invalid_argument(
-        std::string("Numpy format \"") + format_
+        std::string("NumPy format \"") + format_
         + std::string("\" cannot be expressed as a PrimitiveType")
         + FILENAME(__LINE__));
     }
@@ -1081,7 +1081,7 @@ namespace awkward {
           break;
         default:
           throw std::invalid_argument(
-            std::string("cannot convert Numpy format \"") + format_
+            std::string("cannot convert NumPy format \"") + format_
             + std::string("\" into JSON") + FILENAME(__LINE__));
       }
     }
@@ -5218,7 +5218,7 @@ namespace awkward {
     else {
       throw std::runtime_error(
         std::string("FIXME: operation not yet implemented: NumpyArray::is_unique for ")
-        + std::to_string(ndim()) + std::string(" dimentional array")
+        + std::to_string(ndim()) + std::string(" dimensional array")
         + FILENAME(__LINE__));
     }
   }

@@ -60,7 +60,7 @@ def mixin_class_method(ufunc, rhs=None, transpose=True):
         rhs (Set[type] or None): Set of right-hand side argument types, optional
             if wrapping a unary function. The left-hand side is expected to
             always be `self` of the parent class.
-        transpose (bool): If true, autmatically create a transpose signature
+        transpose (bool): If true, automatically create a transpose signature
             (only makes sense for binary ufuncs).
 
     This decorator can be used to register a mixin class method.

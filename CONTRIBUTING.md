@@ -269,7 +269,7 @@ Templating is only used for integer specialization.
 
 We target Python 2.7 and recent versions of Python 3, currently starting with 3.5 (though that may move up to 3.6).
 
-We only supprt Python 2.7 as much as is practical. For example, we ignore compiler warnings when compiling against Python 2.7 and any unit tests that depend on the difference are skipped for Python 2.7.
+We only support Python 2.7 as much as is practical. For example, we ignore compiler warnings when compiling against Python 2.7 and any unit tests that depend on the difference are skipped for Python 2.7.
 
 Python 2.7 and 3.5 have unstable dict order, which excludes them both from some tests.
 

@@ -6,7 +6,7 @@ import json
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 
 def from_iter(input):

@@ -9,8 +9,8 @@ import numba
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
-numpy = ak.nplike.Numpy.instance()
+np = ak.nplike.NumPyMetadata.instance()
+numpy = ak.nplike.NumPy.instance()
 
 
 @numba.extending.typeof_impl.register(ak.layout.NumpyArray)

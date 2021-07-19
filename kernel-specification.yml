@@ -8163,7 +8163,7 @@ tests:
       BitMaskedArray-lsb_order: false
   num: 3
 
-# These are the names of the reducer roles with a minimial indicator of type.
+# These are the names of the reducer roles with a minimal indicator of type.
 
 # If samples.json were samples.yml, we'd be able to include this information in a comment.
 

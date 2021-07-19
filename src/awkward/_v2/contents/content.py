@@ -9,7 +9,7 @@ except ImportError:
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 
 class Content(object):

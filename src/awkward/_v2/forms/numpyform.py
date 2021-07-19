@@ -11,7 +11,7 @@ from awkward._v2.forms.form import Form
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 
 def from_dtype(dtype, parameters=None):

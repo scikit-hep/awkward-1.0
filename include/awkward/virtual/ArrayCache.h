@@ -8,7 +8,7 @@
 namespace awkward {
   /// @class ArrayCache
   ///
-  /// @brief Abstract superclass of cache for VirtualArray, definining
+  /// @brief Abstract superclass of cache for VirtualArray, defining
   /// the interface.
   ///
   /// The main implementation, PyArrayCache, is passed through pybind11 to

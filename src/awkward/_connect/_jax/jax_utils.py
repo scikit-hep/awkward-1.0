@@ -9,8 +9,8 @@ import json
 import jax
 import jax.tree_util
 
-np = ak.nplike.NumpyMetadata.instance()
-numpy = ak.nplike.Numpy.instance()
+np = ak.nplike.NumPyMetadata.instance()
+numpy = ak.nplike.NumPy.instance()
 
 
 def _find_dataptrs(layout):
@@ -108,7 +108,7 @@ def _jaxtracers_getitem(array, where):
                 return fetch_indices_and_fieldloc_layout(outlayout.project())
             elif isinstance(outlayout, ak._util.uniontypes):
                 raise ValueError(
-                    "Can't differntiate an UnionArray type {0}".format(outlayout)
+                    "Can't differentiate an UnionArray type {0}".format(outlayout)
                 )
             elif isinstance(outlayout, ak._util.recordtypes):
                 indices = []
@@ -185,7 +185,7 @@ def _jaxtracers_getitem(array, where):
                 return fetch_children_tracer(outlayout.content, preslice_identities)
             elif isinstance(outlayout, ak._util.uniontypes):
                 raise ValueError(
-                    "Can't differntiate an UnionArray type {0}".format(outlayout)
+                    "Can't differentiate an UnionArray type {0}".format(outlayout)
                 )
             elif isinstance(outlayout, ak._util.recordtypes):
                 children = []
@@ -287,7 +287,7 @@ def special_flatten(array):
         aux_data = AuxData(ak.Array._internal_for_jax(array.layout, children))
     else:
         raise ValueError(
-            "Can only differentiate Awkward Arrays, recieved array of type {0}".format(
+            "Can only differentiate Awkward Arrays, received array of type {0}".format(
                 type(array)
             )
         )

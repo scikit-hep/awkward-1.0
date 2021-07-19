@@ -8,7 +8,7 @@ from awkward._v2.types.type import Type
 
 import awkward as ak
 
-np = ak.nplike.NumpyMetadata.instance()
+np = ak.nplike.NumPyMetadata.instance()
 
 _primitive_to_dtype = {
     "bool": np.dtype(np.bool_),

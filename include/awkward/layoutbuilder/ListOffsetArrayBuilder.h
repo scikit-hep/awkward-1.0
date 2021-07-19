@@ -108,9 +108,9 @@ namespace awkward {
     /// 'false' otherwise.
     bool is_string_builder_;
 
-    /// @brief 'true' if this builder has recieved a 'begin_list' command.
-    /// 'false' if the builder either has not recieved a 'begin_list' command
-    /// or has recieved an 'end_list' command.
+    /// @brief 'true' if this builder has received a 'begin_list' command.
+    /// 'false' if the builder either has not received a 'begin_list' command
+    /// or has received an 'end_list' command.
     bool begun_;
 
     /// @brief an output buffer name is
