@@ -1380,6 +1380,7 @@ def broadcast_arrays(*arrays, **kwargs):
         left_broadcast=left_broadcast,
         right_broadcast=right_broadcast,
         pass_depth=False,
+        numpy_to_regular=True,
     )
     assert isinstance(out, tuple)
     if highlevel:
